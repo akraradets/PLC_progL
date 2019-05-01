@@ -16,7 +16,7 @@ public class UI extends javax.swing.JFrame {
      */
     public UI() {
         initComponents();
-//        commet
+//        comm
     }
 
     /**
