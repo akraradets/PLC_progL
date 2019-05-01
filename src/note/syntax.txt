@@ -1,3 +1,10 @@
+Declaration
+===========
+int x;
+bool x;
+string x;
+
+
 Program 1
 ===========
 int x = 3;

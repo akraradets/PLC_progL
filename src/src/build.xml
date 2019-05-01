@@ -55,9 +55,7 @@
   </target>
 
   <target name="cup" depends = "init">
-    <cup srcfile="${cup}/infix.cup" destdir="${java}" parser="Infix"/>
-    <cup srcfile="${cup}/postfix.cup" destdir="${java}" parser="Postfix"/>
-    <cup srcfile="${cup}/prefix.cup" destdir="${java}" parser="Prefix"/>
+    <cup srcfile="${cup}/progL.cup" destdir="${java}" parser="ProgL"/>
   </target>
 
   <target name="jflex" depends="cup">
@@ -102,10 +100,8 @@
     <delete dir="${java}" />
     <delete dir="${classes}" />
     <delete dir="${dist}" />
-<!--    <delete file="${src}/sym.java" />
+    <delete file="${src}/sym.java" />
     <delete file="${src}/Lexer.java" />
-    <delete file="${src}/Infix.java" />
-    <delete file="${src}/Postfix.java" />
-    <delete file="${src}/Prefix.java" />-->
+    <delete file="${src}/ProgL.java" />
   </target>
 </project>
