@@ -1,0 +1,16 @@
+- => not yet done
++ => done
+
+
+Data Type
+==========
+- integer
+- boolean
+- character
+
+Feature
+=======
+- Assignment
+- Condition
+- If else
+- function call

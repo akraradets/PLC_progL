@@ -1,0 +1,31 @@
+Program 1
+===========
+int x = 3;
+if(x == 3){
+    print("yes");
+}
+else{
+    print("no");
+}
+
+
+Condition
+==========
+=
+>
+<
+<=
+>=
+!
+&&
+||
+
+Function
+=========
+
+boolean isEqual(int x, int y){
+    if(x == y){
+        return TRUE;
+    }
+    return FALSE;
+}
