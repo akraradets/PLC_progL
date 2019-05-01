@@ -1,0 +1,115 @@
+/* ----------------------User code--------------------*/
+
+package src;
+import java_cup.runtime.*;
+import java.util.Hashtable;
+
+parser code {:
+    public Boolean isThisSyntax = false;
+    public Double calResult;
+    public String syntaxPostfix = "";
+    public String syntaxInfix = "";
+:};
+
+action code {: 
+    Hashtable<String, Double> varTable = new Hashtable<String, Double>();
+:};
+/* ------------Grammar symbol declarations----------- */
+   
+terminal                SHARPS, PLUS, MINUS, TIMES, DIVIDES, LPAREN, RPAREN, ASSIGNER, SEPARATOR;
+terminal String         VARIABLE;
+terminal Double         NUMBER;
+non terminal Cupobj     initial, declare, expr;
+
+/* Precedences */
+precedence left SEPARATOR;
+precedence left SHARPS;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDES;
+   
+/* ------------Grammar rules----------- */
+
+start with initial;
+
+initial ::= declare:d SEPARATOR expr:e 
+                {:
+                    this.parser.isThisSyntax = true;
+                    this.parser.calResult = e.val;
+                    this.parser.syntaxPostfix = e.postfix;
+                    this.parser.syntaxInfix = e.infix;
+                    System.out.println(e.val);
+                :}
+          | expr:e
+                {: 
+                    this.parser.isThisSyntax = true;
+                    this.parser.calResult = e.val;
+                    this.parser.syntaxPostfix = e.postfix;
+                    this.parser.syntaxInfix = e.infix;
+                    System.out.println(e.val);
+                :};
+
+declare ::= declare:d1 SEPARATOR declare:d2 
+                {: :}
+          | VARIABLE:v ASSIGNER expr:e 
+                {: 
+                    varTable.put(v, e.val); 
+                :};
+
+expr ::= SHARPS expr:e1 expr:e2
+            {: 
+                RESULT = new Cupobj();
+                RESULT.val = Math.pow(e1.val , 2) - Math.pow(e2.val , 2);
+                RESULT.postfix = "";
+                RESULT.postfix = e1.postfix + " " + e2.postfix + " # ";
+                RESULT.infix = " ( " + e1.infix + " # " + e2.infix + " ) ";
+            :}
+       | PLUS expr:e1 expr:e2
+            {: 
+                RESULT = new Cupobj();
+                RESULT.val = e1.val + e2.val;
+                RESULT.postfix = "";
+                RESULT.postfix = e1.postfix + " " + e2.postfix + " plus ";
+                RESULT.infix = " ( " + e1.infix + " plus " + e2.infix + " ) ";
+            :}
+       | MINUS expr:e1 expr:e2
+            {: 
+                RESULT = new Cupobj();
+                RESULT.val = e1.val - e2.val;
+                RESULT.postfix = e1.postfix + " " + e2.postfix +  " plusplus ";
+                RESULT.infix = " ( " + e1.infix + " plusplus " + e2.infix + " ) ";
+            :}
+       | TIMES expr:e1 expr:e2
+            {: 
+                RESULT = new Cupobj();
+                RESULT.val = e1.val * e2.val;
+                RESULT.postfix =e1.postfix + " " + e2.postfix + " plusplusplus ";
+                RESULT.infix = " ( " + e1.infix + " plusplusplus " + e2.infix + " ) ";
+            :}
+       | DIVIDES expr:e1 expr:e2
+            {: 
+                RESULT = new Cupobj();
+                RESULT.val = e1.val / e2.val;
+                RESULT.postfix = e1.postfix + " " + e2.postfix + " plusplusplusplus ";
+                RESULT.infix = " ( " + e1.infix + " plusplusplusplus " + e2.infix + " ) ";
+            :}
+       | LPAREN expr:e RPAREN
+            {: 
+                RESULT = new Cupobj();
+                RESULT.val = e.val;
+                RESULT.postfix = "( " + e.postfix + " ) ";
+                RESULT.infix = "( " + e.infix + " ) ";
+            :}
+       | VARIABLE:v
+            {: 
+                RESULT = new Cupobj();
+                RESULT.val = varTable.get(v);
+                RESULT.postfix = v;
+                RESULT.infix = v;
+            :}
+       | NUMBER:n
+            {: 
+                RESULT = new Cupobj();
+                RESULT.val = n;
+                RESULT.postfix = n.toString();
+                RESULT.infix = n.toString();
+            :};
