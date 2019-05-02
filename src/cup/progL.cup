@@ -21,7 +21,7 @@ terminal                ASSIGNER, SEPARATOR;
 terminal String         VARIABLE;
 terminal Object         TEXT, NUMBER, BOOLEAN;
 
-non terminal PrimObj    primitive;
+non terminal PrimObj     primitive;
 non terminal PrimObj     initial, declare;
 
 /* Precedences */
@@ -31,14 +31,17 @@ precedence left SEPARATOR;
 
 start with initial;
 
-initial ::= declare:d SEPARATOR | declare:d {: :};
+initial ::= declare:d SEPARATOR             {: System.out.println("asdasd"); :}
+          | declare:d {: System.out.println("asdasd"); :};
 
-primitive ::= PRIM_INTEGER {: RESULT = PrimObj_Factory.get("int");    :}
-          | PRIM_BOOLEAN   {: RESULT = PrimObj_Factory.get("bool");   :}
-          | PRIM_STRING    {: RESULT = PrimObj_Factory.get("string"); :};
+
 
 declare ::= declare:d1 SEPARATOR declare:d2           {:                   :}
           | primitive:p VARIABLE:v                    {: c.declare(v,p);   :}
           | primitive:p VARIABLE:v ASSIGNER NUMBER:n  {: c.declare(v,p,n); :}
-          | primitive:p VARIABLE:v ASSIGNER TEXT:n    {: c.declare(v,p,n); :}
-          | primitive:p VARIABLE:v ASSIGNER BOOLEAN:n {: c.declare(v,p,n); :};
+          | primitive:p VARIABLE:v ASSIGNER BOOLEAN:n {: c.declare(v,p,n); :}
+          | primitive:p VARIABLE:v ASSIGNER TEXT:n    {: c.declare(v,p,n); :};
+
+primitive ::= PRIM_INTEGER {: RESULT = PrimObj_Factory.get("int");    :}
+          | PRIM_BOOLEAN   {: RESULT = PrimObj_Factory.get("bool");   :}
+          | PRIM_STRING    {: RESULT = PrimObj_Factory.get("string"); :};

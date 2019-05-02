@@ -25,6 +25,21 @@ import java_cup.runtime.*;
     private Symbol symbol(int type, Object value) {
         return new Symbol(type, yyline, yycolumn, value);
     }
+
+    private void debug(String type){
+        if(config.debug){
+            if(type == "SEPARATOR")
+                System.out.println("<"+type+">");
+            else
+                System.out.print("<"+type+">");
+        }
+    } 
+
+    private void debug(String type, String text){
+        if(config.debug){
+            System.out.print("<"+type+","+text+">");
+        }
+    } 
 %}
 
 
@@ -32,29 +47,28 @@ import java_cup.runtime.*;
 LineTerminator  = \r | \n | \r\n
 WhiteSpace      = {LineTerminator} | [ \t\f]
 
-Text            = (\".*\")
-
-Boolean         = [true|false]
+Text            = [\"]([^\"])*[\"]
+//text            = ((\")(.[^\"])*(\"))
+Boolean         = (true)|(false)
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
 Integer         = (-)?[0-9][0-9]*
+
 
 %%
 /* ------ Lexical Rules Section ------ */
 // token
-"="     { return symbol(sym.ASSIGNER); }
-";"     { return symbol(sym.SEPARATOR); }
+"="      { debug("ASSIGNER");  return symbol(sym.ASSIGNER);  }
+";"      { debug("SEPARATOR"); return symbol(sym.SEPARATOR); }
 // primitive
-"int"      { return symbol(sym.PRIM_INTEGER); }
-"bool"     { return symbol(sym.PRIM_BOOLEAN); }
-"string"   { return symbol(sym.PRIM_STRING); }
+"int"      { debug("PRIM_INTEGER"); return symbol(sym.PRIM_INTEGER); }
+"bool"     { debug("PRIM_BOOLEAN"); return symbol(sym.PRIM_BOOLEAN); }
+"string"   { debug("PRIM_STRING");  return symbol(sym.PRIM_STRING);  }
 // Boolean
-{Boolean}  { return symbol(sym.BOOLEAN, new Boolean(yytext())); }
-{Variable} { return symbol(sym.VARIABLE, new String(yytext())); }
-{Integer}  { return symbol(sym.NUMBER, new Integer(yytext()));  }
-{Text}     { return symbol(sym.TEXT, new String(yytext()));     }
+{Boolean}  { debug("BOOLEAN",yytext());  return symbol(sym.BOOLEAN, new Boolean(yytext())); }
+{Variable} { debug("VARIABLE",yytext()); return symbol(sym.VARIABLE, new String(yytext())); }
+{Integer}  { debug("NUMBER",yytext());   return symbol(sym.NUMBER, new Integer(yytext()));  }
+{Text}     { debug("TEXT",yytext());     return symbol(sym.TEXT, new String(yytext()));  }
 
 {WhiteSpace}    { /* just skip what was found, do nothing */ }
-
 /* ERROR */
-[^]     { //throw new Error("Illegal character <"+yytext()+">"); 
-}
+[^]     { throw new Error("Illegal character <"+yytext()+">"); }
