@@ -14,3 +14,6 @@ nbdist/
 # End of https://www.gitignore.io/api/netbeans
 /nbproject/private/
 /src/classes/
+/src/src/Lexer.java
+/src/src/ProgL.java
+/src/src/sym.java

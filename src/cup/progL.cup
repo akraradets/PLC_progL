@@ -34,8 +34,6 @@ start with initial;
 initial ::= declare:d SEPARATOR             {: System.out.println("asdasd"); :}
           | declare:d {: System.out.println("asdasd"); :};
 
-
-
 declare ::= declare:d1 SEPARATOR declare:d2           {:                   :}
           | primitive:p VARIABLE:v                    {: c.declare(v,p);   :}
           | primitive:p VARIABLE:v ASSIGNER NUMBER:n  {: c.declare(v,p,n); :}
