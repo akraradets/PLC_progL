@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package memory;
+package src.memory;
 
-import src.Logger;
+import src.PrimObj;
+import src.logger.Logger;
 
 /**
  *

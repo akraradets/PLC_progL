@@ -5,7 +5,7 @@
  */
 package src;
 
-import memory.Memory;
+import src.memory.Memory;
 import java.io.ByteArrayInputStream;
 
 /**

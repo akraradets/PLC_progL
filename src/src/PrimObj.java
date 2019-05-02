@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package memory;
+package src;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import src.Logger;
+import src.logger.Logger;
 
 /**
  *

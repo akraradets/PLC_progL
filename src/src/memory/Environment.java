@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package memory;
+package src.memory;
 
+import src.PrimObj;
 import java.util.Hashtable;
-import src.Logger;
+import src.logger.Logger;
 
 /**
  *

@@ -3,6 +3,7 @@
 package src;
 import java_cup.runtime.*;
 import java.util.Hashtable;
+import src.memory.*;
 
 parser code {:
 
@@ -21,7 +22,7 @@ terminal String         VARIABLE, TEXT;
 terminal Integer        NUMBER;
 
 non terminal PrimObj    primitive;
-non terminal Cupobj     initial, declare;
+non terminal PrimObj     initial, declare;
 
 /* Precedences */
 precedence left SEPARATOR;
@@ -32,9 +33,9 @@ start with initial;
 
 initial ::= declare:d SEPARATOR | declare:d {: :};
 
-primitive ::= PRIM_INTEGER {: RESULT = new PrimObj("int");    :}
-          | PRIM_BOOLEAN   {: RESULT = new PrimObj("bool");   :}
-          | PRIM_STRING    {: RESULT = new PrimObj("string"); :};
+primitive ::= PRIM_INTEGER {: RESULT = PrimObj_Factory.get("int");    :}
+          | PRIM_BOOLEAN   {: RESULT = PrimObj_Factory.get("bool");   :}
+          | PRIM_STRING    {: RESULT = PrimObj_Factory.get("string"); :};
 
 declare ::= declare:d1 SEPARATOR declare:d2          {:                   :}
           | primitive:p VARIABLE:v                   {: m.declare(p,v);   :}
