@@ -17,12 +17,14 @@ action code {:
 terminal                PRIM_INTEGER, PRIM_BOOLEAN, PRIM_STRING;
 // TOKEN set
 terminal                ASSIGNER, SEPARATOR;
+// Operation set
+terminal                PLUS;
 // LEXEME set
 terminal String         VARIABLE;
-terminal Object         TEXT, NUMBER, BOOLEAN;
+terminal Object         OBJECT;
 
-non terminal PrimObj     primitive;
-non terminal PrimObj     initial, declare;
+non terminal PrimObj    primitive;
+non terminal            initial, declare, statement, operation;
 
 /* Precedences */
 precedence left SEPARATOR;
@@ -31,15 +33,19 @@ precedence left SEPARATOR;
 
 start with initial;
 
-initial ::= declare:d SEPARATOR             {: System.out.println("asdasd"); :}
-          | declare:d {: System.out.println("asdasd"); :};
+initial ::= declare:d SEPARATOR           {:  :}
+          | declare:d SEPARATOR statement:s SEPARATOR{:  :};
 
 declare ::= declare:d1 SEPARATOR declare:d2           {:                   :}
           | primitive:p VARIABLE:v                    {: c.declare(v,p);   :}
-          | primitive:p VARIABLE:v ASSIGNER NUMBER:n  {: c.declare(v,p,n); :}
-          | primitive:p VARIABLE:v ASSIGNER BOOLEAN:n {: c.declare(v,p,n); :}
-          | primitive:p VARIABLE:v ASSIGNER TEXT:n    {: c.declare(v,p,n); :};
+          | primitive:p VARIABLE:v ASSIGNER OBJECT:o  {: c.declare(v,p,o); :};
 
 primitive ::= PRIM_INTEGER {: RESULT = PrimObj_Factory.get("int");    :}
           | PRIM_BOOLEAN   {: RESULT = PrimObj_Factory.get("bool");   :}
           | PRIM_STRING    {: RESULT = PrimObj_Factory.get("string"); :};
+
+statement ::= statement:s1 SEPARATOR statement:s2   {: :}
+          | VARIABLE:v ASSIGNER OBJECT:o            {: c.assign(v,o); :}
+          | VARIABLE:v ASSIGNER operation           {: c.assign(v,o); :};
+
+operation ::= OBJECT:o1 PLUS OBJECT:o2 {: :}

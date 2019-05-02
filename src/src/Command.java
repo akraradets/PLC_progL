@@ -41,4 +41,9 @@ public class Command {
         p.setData(o);
         declare(name, p);
     }
+    
+    public void assign(String name, Object o){
+        Environment e = m.getEnvironment();
+        e.update(name, o);
+    }
 }

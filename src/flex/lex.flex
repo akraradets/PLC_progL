@@ -48,7 +48,6 @@ LineTerminator  = \r | \n | \r\n
 WhiteSpace      = {LineTerminator} | [ \t\f]
 
 Text            = [\"]([^\"])*[\"]
-//text            = ((\")(.[^\"])*(\"))
 Boolean         = (true)|(false)
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
 Integer         = (-)?[0-9][0-9]*
@@ -59,15 +58,17 @@ Integer         = (-)?[0-9][0-9]*
 // token
 "="      { debug("ASSIGNER");  return symbol(sym.ASSIGNER);  }
 ";"      { debug("SEPARATOR"); return symbol(sym.SEPARATOR); }
+// operation
+"+"      { debug("PLUS");      return symbol(sym.PLUS); }
 // primitive
 "int"      { debug("PRIM_INTEGER"); return symbol(sym.PRIM_INTEGER); }
 "bool"     { debug("PRIM_BOOLEAN"); return symbol(sym.PRIM_BOOLEAN); }
 "string"   { debug("PRIM_STRING");  return symbol(sym.PRIM_STRING);  }
 // Boolean
-{Boolean}  { debug("BOOLEAN",yytext());  return symbol(sym.BOOLEAN, new Boolean(yytext())); }
+{Boolean}  { debug("BOOLEAN",yytext());  return symbol(sym.OBJECT, new Boolean(yytext())); }
 {Variable} { debug("VARIABLE",yytext()); return symbol(sym.VARIABLE, new String(yytext())); }
-{Integer}  { debug("NUMBER",yytext());   return symbol(sym.NUMBER, new Integer(yytext()));  }
-{Text}     { debug("TEXT",yytext());     return symbol(sym.TEXT, new String(yytext()));  }
+{Integer}  { debug("NUMBER",yytext());   return symbol(sym.OBJECT, new Integer(yytext()));  }
+{Text}     { debug("TEXT",yytext());     return symbol(sym.OBJECT, new String(yytext()));  }
 
 {WhiteSpace}    { /* just skip what was found, do nothing */ }
 /* ERROR */
