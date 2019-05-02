@@ -6,40 +6,48 @@
 package src;
 
 import java.util.*;
+import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  *
  * @author akrarads
  */
 public class Memory {
+
     // static variable single_instance of type Singleton 
-    private static volatile Memory instance = null; 
-    
+
+    private static volatile Memory instance = null;
+
     private Logger logger = new Logger("Memory");
 
     // Memory Stack
     private Stack<Table> stack = new Stack<Table>();
 
     private Memory() {
-        Table table = new Table(stack.size());
-        stack.push(table);
     }
 
-    public static Memory getInstance(){
-        if(instance == null){
-            synchronized(Memory.class){
-                if(instance == null){
+    public static Memory getInstance() {
+        if (instance == null) {
+            synchronized (Memory.class) {
+                if (instance == null) {
                     instance = new Memory();
                 }
             }
         }
         return instance;
     }
-    
-    public void declare(String dataType, String name, Object data) {
+
+    public void declare(PrimObj p, String name, Object data) {
+        // Create
+        this.declare(p, name);
+        Table table = stack.peek();
+        table.update(name, data);
+    }
+
+    public void declare(PrimObj p, String name) {
         // Create
         Table table = stack.peek();
-        table.put(dataType, name, data);
+        table.put(p, name);
     }
 
     public DataObj retrive(String name) {
@@ -48,18 +56,28 @@ public class Memory {
         return table.get(name);
     }
 
-    public void update(String name, Object data){
+    public void update(String name, Object data) {
         // Update
         Table table = stack.peek();
         table.update(name, data);
     }
-    
+
     public void dumpMemory() {
-        Table table = stack.peek();
-        logger.debug(stack.toString());
-        logger.debug(table.toString());
+        String mem = "Stack: \n";
+        for(int i = 0; i < stack.size(); i++){
+            Table t = stack.get(i);
+            mem += "  " + t.tableName + ":\n";
+            mem += "    " + t.toString() + "\n";
+            
+        }
+        logger.debug(mem);
     }
 
+    public void clean(){
+        stack.clear();
+        Table table = new Table(stack.size());
+        stack.push(table);
+    }
 //    public static void main(String[] args) {
 //        try {
 //            Memory m = new Memory();
@@ -81,22 +99,17 @@ public class Memory {
 
 class Table {
 
+    public String tableName;
     private Logger logger;
     private Hashtable<String, DataObj> table;
     private Integer level;
 
-    // A set of support dataType 
-    private static final HashSet<String> dataType_list = new HashSet<>(Arrays.asList(new String[]{
-        "int",
-        "bool",
-        "string"
-    }));
-
     public Table(Integer level) {
         this.level = level;
-        logger = new Logger("Table_" + level.toString());
+        tableName = "Table_" + level.toString();
+        logger = new Logger(tableName);
         table = new Hashtable<String, DataObj>();
-        logger.debug("New table");
+        logger.debug("New table:"+tableName);
     }
 
     public boolean containsKey(String name) {
@@ -106,23 +119,26 @@ class Table {
         return false;
     }
 
-    public void put(String dataType, String name, Object data) {
-        logger.debug("put => " + dataType + " " + name + " = " + data.toString());
-        // Check if dataType is valid
-        if (dataType_list.contains(dataType) == false) {
-            logger.error("dataType <" + dataType + "> is not support!!");
-            logger.error("Support dataType are " + dataType_list.toString());
-            throw new Error("Not support DataType");
-        }
+    public void put(PrimObj p, String name, Object data) {
+        this.allocateMemory(p, name);
+        this.update(name, data);
+    }
 
+    public void put(PrimObj p, String name) {
+        this.allocateMemory(p, name);
+    }
+    
+    private void allocateMemory(PrimObj p, String name){
+        String dataType = p.getType();
+        logger.debug("allocateMemory => " + dataType + " " + name);
         // Check if name is already declare
         if (table.containsKey(name)) {
             logger.error("Variable name <" + name + "> is already declared!!");
             throw new Error("Duplicate Variable Name");
         }
-        table.put(name, new DataObj(dataType, data));
+        table.put(name, new DataObj(p.getType(),null));
     }
-
+    
     public DataObj get(String name) {
         if (table.containsKey(name) == false) {
             logger.error("Variable name <" + name + "> is not exist!!");
@@ -131,16 +147,17 @@ class Table {
         return table.get(name);
     }
 
-    public void update(String name, Object data){
+    public void update(String name, Object data) {
         DataObj d = get(name);
         d.setData(data);
     }
-    
+
     public String toString() {
         return table.toString();
     }
 }
 
+/* DataObj CLASS */
 class DataObj {
 
     private String dataType;
@@ -155,7 +172,6 @@ class DataObj {
         return data;
     }
 
-    
     public void setData(Object data) {
         this.data = data;
     }
@@ -163,5 +179,10 @@ class DataObj {
     public String getDataType() {
         return dataType;
     }
-    
+
+    public String toString(){
+        String d = "null";
+        if(data != null) d = data.toString();
+        return "type:" + this.dataType + " value:" + d;
+    }
 }

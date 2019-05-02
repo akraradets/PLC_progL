@@ -20,7 +20,8 @@ terminal                ASSIGNER, SEPARATOR;
 terminal String         VARIABLE, TEXT;
 terminal Integer        NUMBER;
 
-non terminal Cupobj     initial, declare, primitive;
+non terminal PrimObj    primitive;
+non terminal Cupobj     initial, declare;
 
 /* Precedences */
 precedence left SEPARATOR;
@@ -31,10 +32,10 @@ start with initial;
 
 initial ::= declare:d SEPARATOR | declare:d {: :};
 
-primitive ::= INTEGER | BOOLEAN | STRING;
+primitive ::= INTEGER {: RESULT = new PrimObj("int");    :}
+          | BOOLEAN   {: RESULT = new PrimObj("bool");   :}
+          | STRING    {: RESULT = new PrimObj("string"); :};
 
-declare ::= declare:d1 SEPARATOR declare:d2 
-                {: :}
-          | primitive:p TEXT:t
-                {: :}
-          | primitive:p TEXT:t ASSIGNER NUMBER {: :};
+declare ::= declare:d1 SEPARATOR declare:d2          {:                   :}
+          | primitive:p VARIABLE:v                   {: m.declare(p,v);   :}
+          | primitive:p VARIABLE:v ASSIGNER NUMBER:n {: m.declare(p,v,n); :};

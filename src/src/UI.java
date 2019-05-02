@@ -5,6 +5,8 @@
  */
 package src;
 
+import java.io.ByteArrayInputStream;
+
 /**
  *
  * @author akrarads
@@ -101,12 +103,36 @@ public class UI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRunActionPerformed
-        // TODO add your handling code here:
-        printOutput(inputText.getText());
+        System.out.println("---------------------- INIT ------------------");
+        // Get an instance of memory
+        Memory m = Memory.getInstance();
+        // Clean the memory
+        m.clean();
+        // run program
+        this.run();
+        
+        // debug
+        m.dumpMemory();
+        System.out.println("---------------------- DONE ------------------\n");
     }//GEN-LAST:event_buttonRunActionPerformed
 
+    private void run(){
+        System.out.println("---------------------- RUN ------------------");
+        // Check if infix
+        String inputString = inputText.getText();
+        ProgL progL = new ProgL(new Lexer(new ByteArrayInputStream(inputString.getBytes())));
+        try {
+            progL.parse();
+        } catch (Exception ex) {
+            System.err.println("------------------ BROKEN -------------------");
+            System.err.println(ex);
+        }
+        printOutput(inputText.getText());
+    }
+    
     private void printOutput(String t){
         outputText.setText(t);
+        
     }
     /**
      * @param args the command line arguments
