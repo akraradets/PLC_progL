@@ -13,7 +13,7 @@ action code {:
 :};
 /* ------------Grammar symbol declarations----------- */
 // Primitive set
-terminal                INTEGER, BOOLEAN, STRING;
+terminal                PRIM_INTEGER, PRIM_BOOLEAN, PRIM_STRING;
 // TOKEN set
 terminal                ASSIGNER, SEPARATOR;
 // LEXEME set
@@ -32,9 +32,9 @@ start with initial;
 
 initial ::= declare:d SEPARATOR | declare:d {: :};
 
-primitive ::= INTEGER {: RESULT = new PrimObj("int");    :}
-          | BOOLEAN   {: RESULT = new PrimObj("bool");   :}
-          | STRING    {: RESULT = new PrimObj("string"); :};
+primitive ::= PRIM_INTEGER {: RESULT = new PrimObj("int");    :}
+          | PRIM_BOOLEAN   {: RESULT = new PrimObj("bool");   :}
+          | PRIM_STRING    {: RESULT = new PrimObj("string"); :};
 
 declare ::= declare:d1 SEPARATOR declare:d2          {:                   :}
           | primitive:p VARIABLE:v                   {: m.declare(p,v);   :}

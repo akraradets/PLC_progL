@@ -3,42 +3,42 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package src;
+package memory;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import src.Logger;
 
 /**
  *
  * @author akrarads
  */
-public class PrimObj {
+public class PrimObj_Factory {
 
-    private Logger logger = new Logger("PrimObj");
+    private static Logger logger = new Logger("PrimObj_Factory");
     // A set of support dataType 
-    private static final HashSet<String> primitive_list = new HashSet<>(Arrays.asList(new String[]{
+
+    public static final HashSet<String> primitive_list = new HashSet<>(Arrays.asList(new String[]{
         "int",
         "bool",
         "string"
     }));
 
-    public String type;
-
-    public PrimObj(String type) {
-        // Check if dataType is valid
-        if (primitive_list.contains(type) == false) {
+    public static PrimObj get(String type) {
+        if(type == "int"){
+            return new IntPrim();
+        }
+//        else if(type == "bool"){
+//            
+//        }
+//        else if(type == "string"){
+//            
+//        }
+        else{
             logger.error("primitiveType <" + type + "> is not support!!");
             logger.error("Support primitiveType are " + type.toString());
             throw new Error("Not support primitiveType");
         }
-        this.type = type;
     }
-    
-    public String getType(){
-        return this.type;
-    }
-    
-//    public static void main(String[] args) {
-//        PrimObj p = new PrimObj("sdf");
-//    }
+
 }

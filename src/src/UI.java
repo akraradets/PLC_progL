@@ -5,6 +5,7 @@
  */
 package src;
 
+import memory.Memory;
 import java.io.ByteArrayInputStream;
 
 /**
@@ -107,7 +108,7 @@ public class UI extends javax.swing.JFrame {
         // Get an instance of memory
         Memory m = Memory.getInstance();
         // Clean the memory
-        m.clean();
+        m.init();
         // run program
         this.run();
         

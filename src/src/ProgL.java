@@ -6,6 +6,8 @@
 
 package src;
 
+import memory.PrimObj;
+import memory.Memory;
 import java_cup.runtime.*;
 import java.util.Hashtable;
 

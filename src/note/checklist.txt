@@ -13,4 +13,5 @@ Feature
 - Assignment
 - Condition
 - If else
+- while loop
 - function call

@@ -31,9 +31,12 @@ import java_cup.runtime.*;
 /* ------ Macro Declarations ------ */
 LineTerminator  = \r | \n | \r\n
 WhiteSpace      = {LineTerminator} | [ \t\f]
-Integer         = (-)?[0-9][0-9]*
-Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
+
 Text            = (\".*\")
+
+Boolean         = (true|True|TRUE) | (false|False|FALSE)
+Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
+Integer         = (-)?[0-9][0-9]*
 
 %%
 /* ------ Lexical Rules Section ------ */
@@ -41,10 +44,11 @@ Text            = (\".*\")
 "="     { return symbol(sym.ASSIGNER); }
 ";"     { return symbol(sym.SEPARATOR); }
 // primitive
-"int"      { return symbol(sym.INTEGER); }
-"bool"     { return symbol(sym.BOOLEAN); }
-"string"   { return symbol(sym.STRING); }
-
+"int"      { return symbol(sym.PRIM_INTEGER); }
+"bool"     { return symbol(sym.PRIM_BOOLEAN); }
+"string"   { return symbol(sym.PRIM_STRING); }
+// Boolean
+{Boolean}  { return symbol(sym);}
 {Variable} { return symbol(sym.VARIABLE, new String(yytext())); }
 
 {Integer}  { return symbol(sym.NUMBER, new Integer(yytext())); }
