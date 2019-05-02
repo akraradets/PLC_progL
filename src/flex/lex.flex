@@ -31,24 +31,24 @@ import java_cup.runtime.*;
 /* ------ Macro Declarations ------ */
 LineTerminator  = \r | \n | \r\n
 WhiteSpace      = {LineTerminator} | [ \t\f]
-Digit           = (-)?[0-9][0-9]*(\.[0-9]*[0-9])?
-Variable        = x | y
+Integer         = (-)?[0-9][0-9]*
+Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
+Text            = (\".*\")
 
 %%
 /* ------ Lexical Rules Section ------ */
-
-"plus"     { return symbol(sym.PLUS);   }
-"plusplus"     { return symbol(sym.MINUS);  }
-"plusplusplus"     { return symbol(sym.TIMES);  }
-"plusplusplusplus"     { return symbol(sym.DIVIDES);}
-"#"     { return symbol(sym.SHARPS);}
-"("     { return symbol(sym.LPAREN); }
-")"     { return symbol(sym.RPAREN); }
-{Digit} { return symbol(sym.NUMBER, new Double(yytext())); }
-
+// token
 "="     { return symbol(sym.ASSIGNER); }
-{Variable} { return symbol(sym.VARIABLE, yytext()); }
 ";"     { return symbol(sym.SEPARATOR); }
+// primitive
+"int"      { return symbol(sym.INTEGER); }
+"bool"     { return symbol(sym.BOOLEAN); }
+"string"   { return symbol(sym.STRING); }
+
+{Variable} { return symbol(sym.VARIABLE, new String(yytext())); }
+
+{Integer}  { return symbol(sym.NUMBER, new Integer(yytext())); }
+{Text}     { return symbol(sym.TEXT, new String(yytext())); }
 
 {WhiteSpace}    { /* just skip what was found, do nothing */ }
 

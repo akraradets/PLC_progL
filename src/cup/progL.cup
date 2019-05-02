@@ -5,111 +5,36 @@ import java_cup.runtime.*;
 import java.util.Hashtable;
 
 parser code {:
-    public Boolean isThisSyntax = false;
-    public Double calResult;
-    public String ff = "";
-    public String syntaxPostfix = "";
+
 :};
 
 action code {: 
-    Hashtable<String, Double> varTable = new Hashtable<String, Double>();
+    Memory m = Memory.getInstance();
 :};
 /* ------------Grammar symbol declarations----------- */
-   
-terminal                SHARPS, PLUS, MINUS, TIMES, DIVIDES, LPAREN, RPAREN, ASSIGNER, SEPARATOR;
-terminal String         VARIABLE;
-terminal Double         NUMBER;
-non terminal Cupobj     initial, declare, expr;
+// Primitive set
+terminal                INTEGER, BOOLEAN, STRING;
+// TOKEN set
+terminal                ASSIGNER, SEPARATOR;
+// LEXEME set
+terminal String         VARIABLE, TEXT;
+terminal Integer        NUMBER;
+
+non terminal Cupobj     initial, declare, primitive;
 
 /* Precedences */
 precedence left SEPARATOR;
-precedence left SHARPS;
-precedence left PLUS, MINUS;
-precedence left TIMES, DIVIDES;
-   
+
 /* ------------Grammar rules----------- */
 
 start with initial;
 
-initial ::= declare:d SEPARATOR expr:e 
-                {:
-                    this.parser.isThisSyntax = true;
-                    this.parser.calResult = e.val;
-                    this.parser.syntaxPrefix = e.prefix;
-                    this.parser.syntaxPostfix = e.postfix;
-                    System.out.println(e.val);
-                :}
-          | expr:e
-                {: 
-                    this.parser.isThisSyntax = true;
-                    this.parser.calResult = e.val;
-                    this.parser.syntaxPrefix = e.prefix;
-                    this.parser.syntaxPostfix = e.postfix;
-                    System.out.println(e.val);
-                :};
+initial ::= declare:d SEPARATOR | declare:d {: :};
+
+primitive ::= INTEGER | BOOLEAN | STRING;
 
 declare ::= declare:d1 SEPARATOR declare:d2 
                 {: :}
-          | VARIABLE:v ASSIGNER expr:e 
-                {: 
-                    varTable.put(v, e.val); 
-                :};
-
-expr ::= expr:e1 SHARPS expr:e2
-            {: 
-                RESULT = new Cupobj();
-                RESULT.val = Math.pow(e1.val , 2) - Math.pow(e2.val , 2);
-                RESULT.prefix = "";
-                RESULT.prefix = "# " + e1.prefix + " " + e2.prefix;
-                RESULT.postfix = e1.postfix + " " + e2.postfix + " #";
-            :}
-       | expr:e1 PLUS expr:e2
-            {: 
-                RESULT = new Cupobj();
-                RESULT.val = e1.val + e2.val;
-                RESULT.prefix = "";
-                RESULT.prefix = "plus " + e1.prefix + " " + e2.prefix;
-                RESULT.postfix = e1.postfix + " " + e2.postfix + " plus";
-            :}
-       | expr:e1 MINUS expr:e2
-            {: 
-                RESULT = new Cupobj();
-                RESULT.val = e1.val - e2.val;
-                RESULT.prefix = "plusplus " + e1.prefix + " " + e2.prefix;
-                RESULT.postfix = e1.postfix + " " + e2.postfix + " plusplus";
-            :}
-       | expr:e1 TIMES expr:e2
-            {: 
-                RESULT = new Cupobj();
-                RESULT.val = e1.val * e2.val;
-                RESULT.prefix = "plusplusplus " + e1.prefix + " " + e2.prefix;
-                RESULT.postfix = e1.postfix + " " + e2.postfix + " plusplusplus";
-            :}
-       | expr:e1 DIVIDES expr:e2
-            {: 
-                RESULT = new Cupobj();
-                RESULT.val = e1.val / e2.val;
-                RESULT.prefix = "plusplusplusplus " + e1.prefix + " " + e2.prefix;
-                RESULT.postfix = e1.postfix + " " + e2.postfix + " plusplusplusplus";
-            :}
-       | LPAREN expr:e RPAREN
-            {: 
-                RESULT = new Cupobj();
-                RESULT.val = e.val;
-                RESULT.prefix = e.prefix;
-                RESULT.postfix = e.postfix;
-            :}
-       | VARIABLE:v
-            {: 
-                RESULT = new Cupobj();
-                RESULT.val = varTable.get(v);
-                RESULT.prefix = v;
-                RESULT.postfix = v;
-            :}
-       | NUMBER:n
-            {: 
-                RESULT = new Cupobj();
-                RESULT.val = n;
-                RESULT.prefix = n.toString();
-                RESULT.postfix = n.toString();
-            :};
+          | primitive:p TEXT:t
+                {: :}
+          | primitive:p TEXT:t ASSIGNER NUMBER {: :};

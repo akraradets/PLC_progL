@@ -12,17 +12,30 @@ import java.util.*;
  * @author akrarads
  */
 public class Memory {
-
+    // static variable single_instance of type Singleton 
+    private static volatile Memory instance = null; 
+    
     private Logger logger = new Logger("Memory");
 
     // Memory Stack
     private Stack<Table> stack = new Stack<Table>();
 
-    public Memory() {
+    private Memory() {
         Table table = new Table(stack.size());
         stack.push(table);
     }
 
+    public static Memory getInstance(){
+        if(instance == null){
+            synchronized(Memory.class){
+                if(instance == null){
+                    instance = new Memory();
+                }
+            }
+        }
+        return instance;
+    }
+    
     public void declare(String dataType, String name, Object data) {
         // Create
         Table table = stack.peek();
@@ -47,23 +60,23 @@ public class Memory {
         logger.debug(table.toString());
     }
 
-    public static void main(String[] args) {
-        try {
-            Memory m = new Memory();
-            m.declare("int", "a", new Integer(1));
-            m.declare("int", "b", new Integer(1));
-            m.dumpMemory();
-            DataObj a = m.retrive("a");
-            DataObj b = m.retrive("b");
-        } catch (Exception e) {
-            int i = 1000;
-            while (i > 0) {
-                i--;
-            }
-            throw e;
-        }
-
-    }
+//    public static void main(String[] args) {
+//        try {
+//            Memory m = new Memory();
+//            m.declare("int", "a", new Integer(1));
+//            m.declare("int", "b", new Integer(1));
+//            m.dumpMemory();
+//            DataObj a = m.retrive("a");
+//            DataObj b = m.retrive("b");
+//            Integer c = ((Integer) a.getData());
+//        } catch (Exception e) {
+//            int i = 1000;
+//            while (i > 0) {
+//                i--;
+//            }
+//            throw e;
+//        }
+//    }
 }
 
 class Table {

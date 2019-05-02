@@ -1,7 +1,7 @@
 Declaration
 ===========
-int x;
-bool x;
+int x; | <STR,"int"><STR,"x"><SEPARATOR>
+bool x; | 
 string x;
 
 
