@@ -3,14 +3,14 @@
 package src;
 import java_cup.runtime.*;
 import java.util.Hashtable;
-import src.memory.*;
 
 parser code {:
 
 :};
 
 action code {: 
-    Memory m = Memory.getInstance();
+    // Memory m  = Memory.getInstance();
+    Command c = Command.getInstance();
 :};
 /* ------------Grammar symbol declarations----------- */
 // Primitive set
@@ -18,8 +18,8 @@ terminal                PRIM_INTEGER, PRIM_BOOLEAN, PRIM_STRING;
 // TOKEN set
 terminal                ASSIGNER, SEPARATOR;
 // LEXEME set
-terminal String         VARIABLE, TEXT;
-terminal Integer        NUMBER;
+terminal String         VARIABLE;
+terminal Object         TEXT, NUMBER, BOOLEAN;
 
 non terminal PrimObj    primitive;
 non terminal PrimObj     initial, declare;
@@ -37,6 +37,8 @@ primitive ::= PRIM_INTEGER {: RESULT = PrimObj_Factory.get("int");    :}
           | PRIM_BOOLEAN   {: RESULT = PrimObj_Factory.get("bool");   :}
           | PRIM_STRING    {: RESULT = PrimObj_Factory.get("string"); :};
 
-declare ::= declare:d1 SEPARATOR declare:d2          {:                   :}
-          | primitive:p VARIABLE:v                   {: m.declare(p,v);   :}
-          | primitive:p VARIABLE:v ASSIGNER NUMBER:n {: m.declare(p,v,n); :};
+declare ::= declare:d1 SEPARATOR declare:d2           {:                   :}
+          | primitive:p VARIABLE:v                    {: c.declare(v,p);   :}
+          | primitive:p VARIABLE:v ASSIGNER NUMBER:n  {: c.declare(v,p,n); :}
+          | primitive:p VARIABLE:v ASSIGNER TEXT:n    {: c.declare(v,p,n); :}
+          | primitive:p VARIABLE:v ASSIGNER BOOLEAN:n {: c.declare(v,p,n); :};

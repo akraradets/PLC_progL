@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package src.memory;
+package src;
 
 import src.PrimObj;
 import java.util.Arrays;
@@ -29,12 +29,12 @@ public class PrimObj_Factory {
         if(type == "int"){
             return new IntPrim();
         }
-//        else if(type == "bool"){
-//            
-//        }
-//        else if(type == "string"){
-//            
-//        }
+        else if(type == "bool"){
+            return new BoolPrim();
+        }
+        else if(type == "string"){
+            return new StrPrim();
+        }
         else{
             logger.error("primitiveType <" + type + "> is not support!!");
             logger.error("Support primitiveType are " + type.toString());

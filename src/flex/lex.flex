@@ -34,7 +34,7 @@ WhiteSpace      = {LineTerminator} | [ \t\f]
 
 Text            = (\".*\")
 
-Boolean         = (true|True|TRUE) | (false|False|FALSE)
+Boolean         = [true|false]
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
 Integer         = (-)?[0-9][0-9]*
 
@@ -48,11 +48,10 @@ Integer         = (-)?[0-9][0-9]*
 "bool"     { return symbol(sym.PRIM_BOOLEAN); }
 "string"   { return symbol(sym.PRIM_STRING); }
 // Boolean
-{Boolean}  { return symbol(sym);}
+{Boolean}  { return symbol(sym.BOOLEAN, new Boolean(yytext())); }
 {Variable} { return symbol(sym.VARIABLE, new String(yytext())); }
-
-{Integer}  { return symbol(sym.NUMBER, new Integer(yytext())); }
-{Text}     { return symbol(sym.TEXT, new String(yytext())); }
+{Integer}  { return symbol(sym.NUMBER, new Integer(yytext()));  }
+{Text}     { return symbol(sym.TEXT, new String(yytext()));     }
 
 {WhiteSpace}    { /* just skip what was found, do nothing */ }
 

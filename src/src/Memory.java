@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package src.memory;
+package src;
 
+import src.Environment;
 import src.PrimObj;
 import java.util.*;
 import src.logger.Logger;

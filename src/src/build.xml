@@ -3,7 +3,6 @@
     <property name="cup"     location="cup"     />
     <property name="flex"    location="flex"    />
     <property name="src"     location="src"     />
-    
     <property name="java"    location="java"    />
     <property name="classes" location="classes" />
     <property name="dist"    location="dist"    />
