@@ -55,5 +55,4 @@ public class BoolPrim extends PrimObj {
             throw new Error("Wrong Type");
         }
     }
-    
 }
