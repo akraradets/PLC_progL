@@ -70,6 +70,9 @@ OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI
 COND_AND, COND_OR 
 "&&" { debug("COND_AND", yytext());   return symbol(sym.COND_AND, new String(yytext())); }
 "||" { debug("COND_OR", yytext());   return symbol(sym.COND_OR, new String(yytext())); }
+// argrument
+ARGRU_NEG
+"!"  { debug("ARGRU_NEG", yytext());   return symbol(sym.ARGRU_NEG, new String(yytext())); }
 // primitive
 {Primitive} { debug("PRIMITIVE", yytext()); return symbol(sym.PRIMITIVE, new String(yytext())); }
 

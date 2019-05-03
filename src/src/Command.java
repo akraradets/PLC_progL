@@ -47,7 +47,10 @@ public class Command {
         e.update(name, o);
     }
 
-    public  void condition () {
+    public  void condition () {        
+    }
+
+    public void variable () {
         
     }
 }
