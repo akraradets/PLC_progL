@@ -16,15 +16,17 @@ action code {:
 // Primitive set
 terminal String         PRIMITIVE;
 // TOKEN set
-terminal                ASSIGNER, SEPARATOR, LPARAN, RPARAN;
+terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN;
 // Operation set
 terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
+// Conditon set
+terminal                COND_AND, COND_OR;
 // LEXEME set
 terminal String         VARIABLE;
 terminal Object         OBJECT;
 
 non terminal PrimObj    type, expression;
-non terminal            initial, declare, statement;
+non terminal            initial, declare, statement, condition;
 
 /* Precedences */
 precedence left SEPARATOR;
@@ -55,3 +57,8 @@ expression ::= expression:e1 SEPARATOR expression:e2    {: :}
           | LPAREN expression:e RPAREN {: :}
           | OBJECT:o    {: :}
           | VARIABLE:v  {: :};
+
+condition ::= condition:c1 COND_AND condition:c2 {: c.condition(c1,c2); :}
+          | condition:c1 COND_OR condition:c2 {: :}
+          ;
+          
