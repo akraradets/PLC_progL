@@ -38,9 +38,10 @@ start with initial;
 initial ::= declare:d SEPARATOR           {:  :}
           | declare:d SEPARATOR statement:s SEPARATOR{:  :};
 
-declare ::= declare:d1 SEPARATOR declare:d2           {:                   :}
-          | type:p VARIABLE:v                    {: c.declare(v,p);   :}
-          | type:p VARIABLE:v ASSIGNER OBJECT:o  {: c.declare(v,p,o); :};
+declare ::= declare:d1 SEPARATOR declare:d2         {:                   :}
+          | type:p VARIABLE:v                       {: c.declare(v,p);   :}
+          | type:p VARIABLE:v ASSIGNER OBJECT:o     {: c.declare(v,p,o); :}
+          | type:p VARIABLE:v1 ASSIGNER VARIABLE:v2 {: PrimObj o = c.load(v2); c.declare(v1,p,o); :};
 
 type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
 
@@ -51,6 +52,6 @@ expression ::= expression:e1 OPER_PLUS   expression:e2  {: :}
              | expression:e1 OPER_MINUS  expression:e2  {: :}
              | expression:e1 OPER_DIVIDE expression:e2  {: :}
              | expression:e1 OPER_MULTI  expression:e2  {: :}
-             | LPAREN expression:e RPAREN {: RESULT = e; :}
-             | OBJECT:o    {: RESULT = PrimObj_Factory.get(o); :}
-             | VARIABLE:v  {: :};
+             | LPAREN expression:e RPAREN               {: RESULT = e; :}
+             | OBJECT:o     {: RESULT = PrimObj_Factory.get(o); :}
+             | VARIABLE:v   {: RESULT = c.load(v); :};

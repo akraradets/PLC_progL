@@ -46,4 +46,9 @@ public class Command {
         Environment e = m.getEnvironment();
         e.update(name, o);
     }
+    
+    public PrimObj load(String name){
+        Environment e = m.getEnvironment();
+        return e.get(name);
+    }
 }
