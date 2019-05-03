@@ -47,8 +47,7 @@ type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
 statement ::= statement:s1 SEPARATOR statement:s2   {: :}
           | VARIABLE:v ASSIGNER expression:e        {:  :};
 
-expression ::= expression:e1 SEPARATOR expression:e2    {: :}
-          | expression:e1 OPER_PLUS expression:e2  {: :}
+expression ::= expression:e1 OPER_PLUS expression:e2  {: :}
           | expression:e1 OPER_MINUS expression:e2  {: :}
           | expression:e1 OPER_DIVIDE expression:e2  {: :}
           | expression:e1 OPER_MULTI expression:e2  {: :}
@@ -64,7 +63,8 @@ loop ::= while LPARAN condition RPARAN statement:s {: :}
 condition ::= condition:c1 and condition:c2 {: :}
           | condition:c1 or condition:c2 {: :}
           | LPARAN condition:c RPARAN {: :}
-          | kk comparator kk {: :};
+          | kk comparator kk {: :}
+          | kk {: :};
 
 kk ::= neg kkkk {: :}
     | kkkk {: :};
