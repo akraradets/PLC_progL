@@ -46,8 +46,8 @@ import java_cup.runtime.*;
 /* ------ Macro Declarations ------ */
 LineTerminator  = \r | \n | \r\n
 WhiteSpace      = {LineTerminator} | [ \t\f]
-Primitive       = (int)|(bool)|(string)
 Text            = [\"]([^\"])*[\"]
+Primitive       = (int)|(bool)|(string)
 Boolean         = (true)|(false)
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
 Integer         = (-)?[0-9][0-9]*

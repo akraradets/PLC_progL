@@ -46,19 +46,6 @@ public class Command {
         Environment e = m.getEnvironment();
         e.update(name, o);
     }
-    
-    public void operation(String name, Object o1, String oper, Object o2){
-        logger.debug("Oper: " + oper);
-        switch (oper) {
-            case "+":
-                
-                break;
-        
-            default:
-                logger.error("Operation <" + oper + "> not support");
-                break;
-        }
-    }
 
     public  void condition () {
         

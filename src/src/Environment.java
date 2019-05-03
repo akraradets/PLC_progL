@@ -30,7 +30,9 @@ public class Environment {
 
     public void put(String name, PrimObj p) {
         String dataType = p.getType();
-        logger.debug("put => " + dataType + " " + name);
+        String data = "null";
+        if(p.getData() != null) data = p.getData().toString();
+        logger.debug("put => " + dataType + " " + name + " data:" + data);
         // Check if name is already declare
         if (table.containsKey(name)) {
             logger.error("Variable name <" + name + "> is already declared!!");
