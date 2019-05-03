@@ -41,5 +41,31 @@ public class PrimObj_Factory {
             throw new Error("Not support primitiveType");
         }
     }
-
+    
+    public static PrimObj get(Object o){
+        if(o instanceof Integer){
+            return new IntPrim((int) o);
+        }
+        else if (o instanceof String){
+            return new StrPrim(o.toString());
+        }
+        else if (o instanceof Boolean){
+            return new BoolPrim((boolean) o);
+        }
+        else{
+            logger.error("Unsupport Object of type <"+o.getClass()+">");
+            throw new Error("Unsupport Object");
+        }
+    }
+//    public static void main(String[] args) {
+//        Integer i = 10;
+//        get(i);
+//        String ii = "10";
+//        
+//        Object a = ii;
+//        if(a instanceof String) System.out.println("yes");
+//        get(a);
+//        Boolean iii = true;
+//        get(iii);
+//    }
 }

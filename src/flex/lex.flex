@@ -46,8 +46,8 @@ import java_cup.runtime.*;
 /* ------ Macro Declarations ------ */
 LineTerminator  = \r | \n | \r\n
 WhiteSpace      = {LineTerminator} | [ \t\f]
-Primitive       = (int)|(bool)|(string)
 Text            = [\"]([^\"])*[\"]
+Primitive       = (int)|(bool)|(string)
 Boolean         = (true)|(false)
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
 Integer         = (-)?[0-9][0-9]*
@@ -58,8 +58,8 @@ Integer         = (-)?[0-9][0-9]*
 // token
 "=" { debug("ASSIGNER");  return symbol(sym.ASSIGNER);  }
 ";" { debug("SEPARATOR"); return symbol(sym.SEPARATOR); }
-"(" { debug("LPARAN");    return symbol(sym.LPARAN); }
-")" { debug("RPARAN");    return symbol(sym.RPARAN); }
+"(" { debug("LPAREN");    return symbol(sym.LPAREN); }
+")" { debug("RPAREN");    return symbol(sym.RPAREN); }
 // operation
 OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI
 "+" { debug("OPER_PLUS", yytext());   return symbol(sym.OPER_PLUS, new String(yytext())); }
