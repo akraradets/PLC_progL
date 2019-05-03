@@ -47,8 +47,7 @@ type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
 statement ::= statement:s1 SEPARATOR statement:s2   {: :}
           | VARIABLE:v ASSIGNER expression:e        {: c.assign(v,e); :};
 
-expression ::= expression:e1 SEPARATOR   expression:e2  {: :}
-             | expression:e1 OPER_PLUS   expression:e2  {: :}
+expression ::= expression:e1 OPER_PLUS   expression:e2  {: :}
              | expression:e1 OPER_MINUS  expression:e2  {: :}
              | expression:e1 OPER_DIVIDE expression:e2  {: :}
              | expression:e1 OPER_MULTI  expression:e2  {: :}
