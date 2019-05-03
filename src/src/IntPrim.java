@@ -26,11 +26,6 @@ public class IntPrim extends PrimObj {
         setType("int");
         setData(i);
     }
-
-    @Override
-    public void plus(Object a, Object b) {
-        data = cast(a) + cast(b);
-    }
     
     @Override
     public Integer getData() {

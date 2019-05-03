@@ -61,21 +61,17 @@ Integer         = (-)?[0-9][0-9]*
 "(" { debug("LPAREN");    return symbol(sym.LPAREN); }
 ")" { debug("RPAREN");    return symbol(sym.RPAREN); }
 // operation
-OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI
 "+" { debug("OPER_PLUS", yytext());   return symbol(sym.OPER_PLUS, new String(yytext())); }
 "-" { debug("OPER_MINUS", yytext());  return symbol(sym.OPER_MINUS, new String(yytext())); }
-"*" { debug("OPER_DIVIDE", yytext()); return symbol(sym.OPER_DIVIDE, new String(yytext())); }
-"/" { debug("OPER_MULTI", yytext());  return symbol(sym.OPER_MULTI, new String(yytext())); }
+"/" { debug("OPER_DIVIDE", yytext()); return symbol(sym.OPER_DIVIDE, new String(yytext())); }
+"*" { debug("OPER_MULTI", yytext());  return symbol(sym.OPER_MULTI, new String(yytext())); }
 // condition
-COND_AND, COND_OR 
 "&&" { debug("COND_AND", yytext());   return symbol(sym.COND_AND, new String(yytext())); }
 "||" { debug("COND_OR", yytext());   return symbol(sym.COND_OR, new String(yytext())); }
 // argrument
-ARGRU_NEG
 "!"  { debug("ARGRU_NEG", yytext());   return symbol(sym.ARGRU_NEG, new String(yytext())); }
 // primitive
 {Primitive} { debug("PRIMITIVE", yytext()); return symbol(sym.PRIMITIVE, new String(yytext())); }
-
 {Boolean}  { debug("BOOLEAN",yytext());  return symbol(sym.OBJECT, new Boolean(yytext())); }
 {Variable} { debug("VARIABLE",yytext()); return symbol(sym.VARIABLE, new String(yytext())); }
 {Integer}  { debug("NUMBER",yytext());   return symbol(sym.OBJECT, new Integer(yytext()));  }
