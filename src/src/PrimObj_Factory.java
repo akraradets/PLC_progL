@@ -26,13 +26,13 @@ public class PrimObj_Factory {
     }));
 
     public static PrimObj get(String type) {
-        if(type == "int"){
+        if(type.equals("int")){
             return new IntPrim();
         }
-        else if(type == "bool"){
+        else if(type.equals("bool")){
             return new BoolPrim();
         }
-        else if(type == "string"){
+        else if(type.equals("string")){
             return new StrPrim();
         }
         else{

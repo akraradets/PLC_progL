@@ -53,5 +53,6 @@ expression ::= expression:e1 SEPARATOR expression:e2    {: :}
           | expression:e1 OPER_MINUS expression:e2  {: :}
           | expression:e1 OPER_DIVIDE expression:e2  {: :}
           | expression:e1 OPER_MULTI expression:e2  {: :}
+          | LPAREN expression:e RPAREN {: :}
           | OBJECT:o    {: :}
           | VARIABLE:v  {: :};
