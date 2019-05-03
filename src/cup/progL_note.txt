@@ -55,3 +55,20 @@ expression ::= expression:e1 SEPARATOR expression:e2    {: :}
           | LPAREN expression:e RPAREN {: :}
           | OBJECT:o    {: :}
           | VARIABLE:v  {: :};
+
+if ::= if LPARAN condition:c RPARAN statement:s  {: :}
+    | if LPARAN condition:c RPARAN statement:s1 else statement:s2 {: :}
+
+loop ::= while LPARAN condition RPARAN statement:s {: :}
+
+condition ::= condition:c1 and condition:c2 {: :}
+          | condition:c1 or condition:c2 {: :}
+          | LPARAN condition:c RPARAN {: :}
+          | kk comparator kk {: :};
+
+kk ::= neg kkkk {: :}
+    | kkkk {: :};
+
+kkkk ::= OBJECT {: :}
+    | VARIABLE  {: :}
+    | expression {: :};
