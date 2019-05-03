@@ -28,7 +28,6 @@ public abstract class PrimObj {
 
     public abstract Object getData();
     public abstract void setData(Object o);
-    public abstract void plus(Object a, Object b);
     
     @Override
     public String toString() {

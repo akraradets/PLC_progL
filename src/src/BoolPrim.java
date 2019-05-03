@@ -26,12 +26,6 @@ public class BoolPrim extends PrimObj {
     }
 
     @Override
-    public void plus(Object a, Object b) {
-        logger.error("Operan + is not support for type <Boolean>");
-        throw new Error("Operand Not Support");
-    }
-    
-    @Override
     public Boolean getData() {
         return data;
     }

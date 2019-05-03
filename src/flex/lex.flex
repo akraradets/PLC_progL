@@ -64,8 +64,8 @@ Integer         = (-)?[0-9][0-9]*
 OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI
 "+" { debug("OPER_PLUS", yytext());   return symbol(sym.OPER_PLUS, new String(yytext())); }
 "-" { debug("OPER_MINUS", yytext());  return symbol(sym.OPER_MINUS, new String(yytext())); }
-"*" { debug("OPER_DIVIDE", yytext()); return symbol(sym.OPER_DIVIDE, new String(yytext())); }
-"/" { debug("OPER_MULTI", yytext());  return symbol(sym.OPER_MULTI, new String(yytext())); }
+"/" { debug("OPER_DIVIDE", yytext()); return symbol(sym.OPER_DIVIDE, new String(yytext())); }
+"*" { debug("OPER_MULTI", yytext());  return symbol(sym.OPER_MULTI, new String(yytext())); }
 // primitive
 {Primitive} { debug("PRIMITIVE", yytext()); return symbol(sym.PRIMITIVE, new String(yytext())); }
 
