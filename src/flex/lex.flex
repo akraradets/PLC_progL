@@ -46,7 +46,7 @@ import java_cup.runtime.*;
 /* ------ Macro Declarations ------ */
 LineTerminator  = \r | \n | \r\n
 WhiteSpace      = {LineTerminator} | [ \t\f]
-
+Primitive       = (int)|(bool)|(string)
 Text            = [\"]([^\"])*[\"]
 Boolean         = (true)|(false)
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
@@ -56,15 +56,19 @@ Integer         = (-)?[0-9][0-9]*
 %%
 /* ------ Lexical Rules Section ------ */
 // token
-"="      { debug("ASSIGNER");  return symbol(sym.ASSIGNER);  }
-";"      { debug("SEPARATOR"); return symbol(sym.SEPARATOR); }
+"=" { debug("ASSIGNER");  return symbol(sym.ASSIGNER);  }
+";" { debug("SEPARATOR"); return symbol(sym.SEPARATOR); }
+"(" { debug("LPARAN");    return symbol(sym.LPARAN); }
+")" { debug("RPARAN");    return symbol(sym.RPARAN); }
 // operation
-"+"      { debug("PLUS");      return symbol(sym.PLUS); }
+OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI
+"+" { debug("OPER_PLUS", yytext());   return symbol(sym.OPER_PLUS, new String(yytext())); }
+"-" { debug("OPER_MINUS", yytext());  return symbol(sym.OPER_MINUS, new String(yytext())); }
+"*" { debug("OPER_DIVIDE", yytext()); return symbol(sym.OPER_DIVIDE, new String(yytext())); }
+"/" { debug("OPER_MULTI", yytext());  return symbol(sym.OPER_MULTI, new String(yytext())); }
 // primitive
-"int"      { debug("PRIM_INTEGER"); return symbol(sym.PRIM_INTEGER); }
-"bool"     { debug("PRIM_BOOLEAN"); return symbol(sym.PRIM_BOOLEAN); }
-"string"   { debug("PRIM_STRING");  return symbol(sym.PRIM_STRING);  }
-// Boolean
+{Primitive} { debug("PRIMITIVE", yytext()); return symbol(sym.PRIMITIVE, new String(yytext())); }
+
 {Boolean}  { debug("BOOLEAN",yytext());  return symbol(sym.OBJECT, new Boolean(yytext())); }
 {Variable} { debug("VARIABLE",yytext()); return symbol(sym.VARIABLE, new String(yytext())); }
 {Integer}  { debug("NUMBER",yytext());   return symbol(sym.OBJECT, new Integer(yytext()));  }

@@ -5,6 +5,8 @@
  */
 package src.logger;
 
+import src.config;
+
 /**
  *
  * @author akrarads
@@ -17,7 +19,8 @@ public class Logger {
     }
     
     public void debug(String msg){
-        System.out.println(className + ": " + msg);
+        if(config.debug == true)
+            System.out.println(className + ": " + msg);
     }
     
     public void error(String msg){

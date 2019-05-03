@@ -14,20 +14,23 @@ action code {:
 :};
 /* ------------Grammar symbol declarations----------- */
 // Primitive set
-terminal                PRIM_INTEGER, PRIM_BOOLEAN, PRIM_STRING;
+terminal String         PRIMITIVE;
 // TOKEN set
-terminal                ASSIGNER, SEPARATOR;
+terminal                ASSIGNER, SEPARATOR, LPARAN, RPARAN;
 // Operation set
-terminal                PLUS;
+terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // LEXEME set
 terminal String         VARIABLE;
 terminal Object         OBJECT;
 
-non terminal PrimObj    primitive;
-non terminal            initial, declare, statement, operation;
+non terminal PrimObj    type;
+non terminal MathObj    expression;
+non terminal            initial, declare, statement;
 
 /* Precedences */
 precedence left SEPARATOR;
+precedence left OPER_PLUS, OPER_MINUS;
+precedence left OPER_DIVIDE, OPER_MULTI;
 
 /* ------------Grammar rules----------- */
 
@@ -37,15 +40,18 @@ initial ::= declare:d SEPARATOR           {:  :}
           | declare:d SEPARATOR statement:s SEPARATOR{:  :};
 
 declare ::= declare:d1 SEPARATOR declare:d2           {:                   :}
-          | primitive:p VARIABLE:v                    {: c.declare(v,p);   :}
-          | primitive:p VARIABLE:v ASSIGNER OBJECT:o  {: c.declare(v,p,o); :};
+          | type:p VARIABLE:v                    {: c.declare(v,p);   :}
+          | type:p VARIABLE:v ASSIGNER OBJECT:o  {: c.declare(v,p,o); :};
 
-primitive ::= PRIM_INTEGER {: RESULT = PrimObj_Factory.get("int");    :}
-          | PRIM_BOOLEAN   {: RESULT = PrimObj_Factory.get("bool");   :}
-          | PRIM_STRING    {: RESULT = PrimObj_Factory.get("string"); :};
+type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
 
 statement ::= statement:s1 SEPARATOR statement:s2   {: :}
-          | VARIABLE:v ASSIGNER OBJECT:o            {: c.assign(v,o); :}
-          | VARIABLE:v ASSIGNER operation           {: c.assign(v,o); :};
+          | VARIABLE:v ASSIGNER expression:e        {:  :};
 
-operation ::= OBJECT:o1 PLUS OBJECT:o2 {: :}
+expression ::= expression:e1 SEPARATOR expression:e2    {: :}
+          | expression:e1 OPER_PLUS expression:e2  {: :}
+          | expression:e1 OPER_MINUS expression:e2  {: :}
+          | expression:e1 OPER_DIVIDE expression:e2  {: :}
+          | expression:e1 OPER_MULTI expression:e2  {: :}
+          | OBJECT:o    {: :}
+          | VARIABLE:v  {: :};
