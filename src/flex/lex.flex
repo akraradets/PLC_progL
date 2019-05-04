@@ -60,6 +60,11 @@ Integer         = [0-9][0-9]*
 ";" { debug("SEPARATOR"); return symbol(sym.SEPARATOR); }
 "(" { debug("LPAREN");    return symbol(sym.LPAREN); }
 ")" { debug("RPAREN");    return symbol(sym.RPAREN); }
+"{" { debug("LBRANCE");   return symbol(sym.LBRANCE); }
+"}" { debug("RBRANCE");   return symbol(sym.RBRANCE); }
+// if-else
+"if"    { debug("IF");   return symbol(sym.IF);}
+"else"  { debug("ELSE"); return symbol(sym.ELSE);}
 // operation
 "+" { debug("OPER_PLUS", yytext());   return symbol(sym.OPER_PLUS, new String(yytext())); }
 "-" { debug("OPER_MINUS", yytext());  return symbol(sym.OPER_MINUS, new String(yytext())); }

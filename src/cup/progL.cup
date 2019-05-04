@@ -16,7 +16,7 @@ action code {:
 // Primitive set
 terminal String         PRIMITIVE;
 // TOKEN set
-terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN;
+terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE;
 // Operation set
 terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // LEXEME set
@@ -39,6 +39,7 @@ initial ::= statement:s SEPARATOR           {:  :};
 
 statement ::= statement:s1 SEPARATOR statement:s2   {: :}
           | declare:d                               {: :}
+          | LBRANCE {: System.out.println("{"); :} RBRANCE {: System.out.println("}"); :}
           | VARIABLE:v ASSIGNER expression:e        {: c.assign(v,e); :};
 
 declare ::= type:p VARIABLE:v                       {: c.declare(v,p);   :}
