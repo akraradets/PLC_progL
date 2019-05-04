@@ -18,7 +18,7 @@ terminal String         PRIMITIVE;
 // TOKEN set
 terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN;
 // Operation set
-terminal String         OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
+terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // LEXEME set
 terminal String         VARIABLE;
 terminal Object         OBJECT;
@@ -46,10 +46,10 @@ declare ::= type:p VARIABLE:v                       {: c.declare(v,p);   :}
 
 type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
 
-expression ::= expression:e1 OPER_PLUS:oper   expression:e2  {: RESULT = c.plus(e1,e2); :}
-             | expression:e1 OPER_MINUS:oper  expression:e2  {: RESULT = c.minus(e1,e2); :}
-             | expression:e1 OPER_DIVIDE:oper expression:e2  {: RESULT = c.divide(e1,e2); :}
-             | expression:e1 OPER_MULTI:oper  expression:e2  {: RESULT = c.multiply(e1,e2); :}
+expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = c.plus(e1,e2); :}
+             | expression:e1 OPER_MINUS  expression:e2  {: RESULT = c.minus(e1,e2); :}
+             | expression:e1 OPER_DIVIDE expression:e2  {: RESULT = c.divide(e1,e2); :}
+             | expression:e1 OPER_MULTI  expression:e2  {: RESULT = c.multiply(e1,e2); :}
              | LPAREN expression:e RPAREN   {: RESULT = e; :}
              | OPER_MINUS expression:e {: RESULT = c.neg_expression(e); :}
              | OBJECT:o     {: RESULT = PrimObj_Factory.get(o); :}
