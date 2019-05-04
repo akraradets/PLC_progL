@@ -72,7 +72,13 @@ Integer         = [0-9][0-9]*
 "*" { debug("OPER_MULTI", yytext());  return symbol(sym.OPER_MULTI, new String(yytext())); }
 // condition
 "&&" { debug("COND_AND", yytext());   return symbol(sym.COND_AND, new String(yytext())); }
-"||" { debug("COND_OR", yytext());   return symbol(sym.COND_OR, new String(yytext())); }
+"||" { debug("COND_OR", yytext());    return symbol(sym.COND_OR, new String(yytext())); }
+// comparator
+"=="  { debug("COMP_EQUAL", yytext());    return symbol(sym.COMP_EQUAL, new String(yytext())); }
+"<"   { debug("COMP_LESSTHAN", yytext());  return symbol(sym.COMP_LESSTHAN, new String(yytext())); }
+">"   { debug("COMP_MORETHAN", yytext());  return symbol(sym.COMP_MORETHAN, new String(yytext())); }
+">="  { debug("COMP_MOREorEQUAL", yytext());  return symbol(sym.COMP_MOREorEQUAL, new String(yytext())); }
+"<="  { debug("COMP_LESSorEQUAL", yytext());  return symbol(sym.COMP_LESSorEQUAL, new String(yytext())); }
 // argrument
 "!"  { debug("ARGRU_NEG", yytext());   return symbol(sym.ARGRU_NEG, new String(yytext())); }
 // primitive
