@@ -25,6 +25,9 @@ public class StrPrim extends PrimObj{
         setData(i);
     }
 
+    public StrPrim(Object o1, Object o2){
+        data = cast(o1) + cast(o2);
+    }
     
     @Override
     public String getData() {
@@ -36,7 +39,7 @@ public class StrPrim extends PrimObj{
         data = cast(o);
         logger.debug("set Data: " + data.toString());
     }
-    
+
     private String cast(Object o){
         if(o.getClass() == this.getClass()){
             StrPrim i = (StrPrim) o;
@@ -44,10 +47,19 @@ public class StrPrim extends PrimObj{
         }
         try {
             String i = (String) o;
+//            // String will come in this "(.[^"])*"
+//            // Remove first and last character which is <">
+            i = i.substring(1, i.length() -1 );
             return i;
         } catch (Exception e) {
             logger.error("Wrong Type where expected <String> --> " + "The given Type is <" + o.getClass() +">");
             throw new Error("Wrong Type");
         }
     }
+    
+//    public static void main(String[] args) {
+//        String s = "\"asdasd\"";
+//        s = s.substring( 1 , s.length()-1 );
+//        System.out.println(s);
+//    }
 }

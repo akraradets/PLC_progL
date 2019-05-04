@@ -50,7 +50,7 @@ Text            = [\"]([^\"])*[\"]
 Primitive       = (int)|(bool)|(string)
 Boolean         = (true)|(false)
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
-Integer         = (-)?[0-9][0-9]*
+Integer         = [0-9][0-9]*
 
 
 %%
@@ -61,7 +61,6 @@ Integer         = (-)?[0-9][0-9]*
 "(" { debug("LPAREN");    return symbol(sym.LPAREN); }
 ")" { debug("RPAREN");    return symbol(sym.RPAREN); }
 // operation
-OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI
 "+" { debug("OPER_PLUS", yytext());   return symbol(sym.OPER_PLUS, new String(yytext())); }
 "-" { debug("OPER_MINUS", yytext());  return symbol(sym.OPER_MINUS, new String(yytext())); }
 "/" { debug("OPER_DIVIDE", yytext()); return symbol(sym.OPER_DIVIDE, new String(yytext())); }

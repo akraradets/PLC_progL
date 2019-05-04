@@ -35,23 +35,22 @@ precedence left OPER_DIVIDE, OPER_MULTI;
 
 start with initial;
 
-initial ::= declare:d SEPARATOR           {:  :}
-          | declare:d SEPARATOR statement:s SEPARATOR{:  :};
-
-declare ::= declare:d1 SEPARATOR declare:d2         {:                   :}
-          | type:p VARIABLE:v                       {: c.declare(v,p);   :}
-          | type:p VARIABLE:v ASSIGNER OBJECT:o     {: c.declare(v,p,o); :}
-          | type:p VARIABLE:v1 ASSIGNER VARIABLE:v2 {: PrimObj o = c.load(v2); c.declare(v1,p,o); :};
-
-type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
+initial ::= statement:s SEPARATOR           {:  :};
 
 statement ::= statement:s1 SEPARATOR statement:s2   {: :}
+          | declare:d                               {: :}
           | VARIABLE:v ASSIGNER expression:e        {: c.assign(v,e); :};
+
+declare ::= type:p VARIABLE:v                       {: c.declare(v,p);   :}
+          | type:p VARIABLE:v1 ASSIGNER expression:e {: c.declare(v1,p,e); :};
+
+type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
 
 expression ::= expression:e1 OPER_PLUS:oper   expression:e2  {: RESULT = c.plus(e1,e2); :}
              | expression:e1 OPER_MINUS:oper  expression:e2  {: RESULT = c.minus(e1,e2); :}
              | expression:e1 OPER_DIVIDE:oper expression:e2  {: RESULT = c.divide(e1,e2); :}
              | expression:e1 OPER_MULTI:oper  expression:e2  {: RESULT = c.multiply(e1,e2); :}
-             | LPAREN expression:e RPAREN               {: RESULT = e; :}
+             | LPAREN expression:e RPAREN   {: RESULT = e; :}
+             | OPER_MINUS expression:e {: RESULT = c.negative(e); :}
              | OBJECT:o     {: RESULT = PrimObj_Factory.get(o); :}
              | VARIABLE:v   {: RESULT = c.load(v); :};
