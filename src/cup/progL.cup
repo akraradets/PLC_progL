@@ -32,11 +32,11 @@ terminal Object         OBJECT;
 
 non terminal ExpressionNode expression;
 non terminal StatementNode  statement,declare;
-non terminal PrimObj    type, expression, argument, condition;
+non terminal ConditionNode  argument, condition;
 non terminal            initial;
 
 /* Precedences */
-precedence left COMPATOR;
+// precedence left COND_AND,COND_OR,COMP_EQUAL,COMP_LESSTHAN,COMP_MORETHAN,COMP_MOREorEQUAL,COMP_LESSorEQUAL;
 precedence left SEPARATOR, ASSIGNER;
 precedence left OPER_PLUS, OPER_MINUS;
 precedence left OPER_DIVIDE, OPER_MULTI;
@@ -65,17 +65,10 @@ expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNo
              | VARIABLE:v   {: RESULT = ExpressionNode.readVariable(v); :};
 
 
-condition ::= condition:c1 COND_AND condition:c2 {: RESULT = c.cond_and(c1,c2);   :}
-          |   condition:c1 COND_OR  condition:c2 {: RESULT = c.cond_or(c1,c2);    :} 
-          |   argument:a1 COMP_EQUAL argument:a2 {: RESULT = c.comp_equal(a1,a2); :}
-          |   argument:a1 COMP_LESSTHAN argument:a2 {: RESULT = c.comp_lessthan (a1,a2); :}
-          |   argument:a1 COMP_MORETHAN argument:a2 {: RESULT = c.comp_morethan (a1,a2); :}
-          |   argument:a1 COMP_MOREorEQUAL argument:a2 {: RESULT = c.comp_moreORequal (a1,a2); :}
-          |   argument:a1 COMP_LESSorEQUAL argument:a2 {: RESULT = c.comp_lessORequal (a1,a2); :}
-          |   LPAREN condition:c RPAREN          {: RESULT = c; :}
+condition ::= condition:c1 COND_AND condition:c2 {: RESULT = ConditionNode.cond_and(c1,c2);   :}
           |   argument:a                         {: RESULT = a; :};
 
-argument ::= ARGRU_NEG argument:a   {: RESULT = c.neg_argument(a); :}
-            | OBJECT:o              {: RESULT = PrimObj_Factory.get(o); :}
-            | VARIABLE:v            {: RESULT = c.load(v); :}
-            | expression:e          {: RESULT = e; :};
+argument ::= ARGRU_NEG argument:a   {: RESULT = ConditionNode.flipArgument(a);   :}
+            | OBJECT:o              {: RESULT = ConditionNode.readObject(o);     :}
+            | VARIABLE:v            {: RESULT = ConditionNode.readVariable(v);   :}
+            | expression:e          {: RESULT = ConditionNode.evalExpression(e); :};
