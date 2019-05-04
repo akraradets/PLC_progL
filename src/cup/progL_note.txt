@@ -27,6 +27,7 @@ non terminal PrimObj    type, expression;
 non terminal            initial, declare, statement;
 
 /* Precedences */
+precedence left COMPATOR;
 precedence left SEPARATOR, ASSIGNER;
 precedence left OPER_PLUS, OPER_MINUS;
 precedence left OPER_DIVIDE, OPER_MULTI;
@@ -65,12 +66,10 @@ loop ::= while LPARAN condition RPARAN statement:s {: :}
 condition ::= condition:c1 and condition:c2 {: :}
           | condition:c1 or condition:c2 {: :}
           | LPARAN condition:c RPARAN {: :}
-          | kk comparator kk {: :}
-          | kk {: :};
+          | argrument COMPARATOR argrument {: :}
+          | argrument {: :};
 
-kk ::= neg kkkk {: :}
-    | kkkk {: :};
-
-kkkk ::= OBJECT {: :}
+argrument ::= neg argrument {: :}
+    | OBJECT {: :}
     | VARIABLE  {: :}
     | expression {: :};
