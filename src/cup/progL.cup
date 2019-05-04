@@ -21,14 +21,16 @@ terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, I
 terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // Conditon set
 terminal                COND_AND, COND_OR;
-// Argrument set
+// Comparator set
+terminal                COMP_EQUAL, COMP_LESSTHAN, COMP_MORETHAN, COMP_MOREorEQUAL, COMP_LESSorEQUAL;
+// Argument set
 terminal                ARGRU_NEG;
 // LEXEME set
 terminal String         VARIABLE;
 terminal Object         OBJECT;
 
-non terminal PrimObj    type, expression, argument;
-non terminal            initial, declare, statement, condition;
+non terminal PrimObj    type, expression, argument, condition;
+non terminal            initial, declare, statement;
 
 /* Precedences */
 precedence left SEPARATOR, ASSIGNER;
@@ -60,9 +62,13 @@ expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = c.plus(e1,e2
              | OBJECT:o     {: RESULT = PrimObj_Factory.get(o); :}
              | VARIABLE:v   {: RESULT = c.load(v); :};
 
-condition ::= condition:c1 COND_AND condition:c2 {: RESULT = c.cond_and(C1,c2) :}
-          |   condition:c1 COND_OR  condition:c2 {: RESULT = c.cond_or(c1,c2)  :} 
-          |   argrument COMPARATOR argrument     {: :}
+condition ::= condition:c1 COND_AND condition:c2 {: RESULT = c.cond_and(c1,c2);   :}
+          |   condition:c1 COND_OR  condition:c2 {: RESULT = c.cond_or(c1,c2);    :} 
+          |   argument:a1 COMP_EQUAL argument:a2 {: RESULT = c.comp_equal(a1,a2); :}
+          |   argument:a1 COMP_LESSTHAN argument:a2 {: RESULT = c.comp_lessthan (a1,a2); :}
+          |   argument:a1 COMP_MORETHAN argument:a2 {: RESULT = c.comp_morethan (a1,a2); :}
+          |   argument:a1 COMP_MOREorEQUAL argument:a2 {: RESULT = c.comp_moreORequal (a1,a2); :}
+          |   argument:a1 COMP_LESSorEQUAL argument:a2 {: RESULT = c.comp_lessORequal (a1,a2); :}
           |   LPAREN condition:c RPAREN          {: RESULT = c; :}
           |   argument:a                         {: RESULT = a; :};
 
