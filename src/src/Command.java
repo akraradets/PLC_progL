@@ -204,12 +204,12 @@ public class Command {
         throw new Error("Only [IntPrim] is support for multiplication");       
     }
 
-    public static void main(String[] args) {
-        PrimObj a1 = PrimObj_Factory.get(new Integer(6));
-        PrimObj a2 = PrimObj_Factory.get(new Integer(5));
-        Command c = Command.getInstance();
-        c.comp_lessORequal(a1,a2);
-        System.out.println(c.toString());
-    }
+//    public static void main(String[] args) {
+//        PrimObj a1 = PrimObj_Factory.get(new Integer(6));
+//        PrimObj a2 = PrimObj_Factory.get(new Integer(5));
+//        Command c = Command.getInstance();
+//        c.comp_lessORequal(a1,a2);
+//        System.out.println(c.toString());
+//    }
 
 }
