@@ -29,6 +29,12 @@ public class BoolPrim extends PrimObj {
     public Boolean getData() {
         return data;
     }
+    
+    public void setNeg () {
+        this.data = !data;
+    }
+    
+    
 
     @Override
     public void setData(Object o) {

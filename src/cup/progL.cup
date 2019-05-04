@@ -27,8 +27,8 @@ terminal                ARGRU_NEG;
 terminal String         VARIABLE;
 terminal Object         OBJECT;
 
-non terminal PrimObj    type, expression;
-non terminal            initial, declare, statement, condition, argrument;
+non terminal PrimObj    type, expression, argument;
+non terminal            initial, declare, statement, condition;
 
 /* Precedences */
 precedence left SEPARATOR, ASSIGNER;
@@ -60,13 +60,14 @@ expression ::= expression:e1 OPER_PLUS:oper   expression:e2  {: RESULT = c.plus(
              | OBJECT:o     {: RESULT = PrimObj_Factory.get(o); :}
              | VARIABLE:v   {: RESULT = c.load(v); :};
 
-condition ::= condition:c1 COND_AND condition:c2 {: :}
-          | condition:c1 COND_OR condition:c2 {: :} 
-          | LPAREN condition:c RPAREN {: :}
-          | argrument {: :};
+condition ::= condition:c1 COND_AND condition:c2 {: RESULT = c.cond_and(C1,c2) :}
+          |   condition:c1 COND_OR  condition:c2 {: RESULT = c.cond_or(c1,c2)  :} 
+          |   argrument COMPARATOR argrument     {: :}
+          |   LPAREN condition:c RPAREN          {: RESULT = c; :}
+          |   argument:a                         {: RESULT = a; :};
 
-argrument ::= ARGRU_NEG argrument {: :}
-    | OBJECT {: :}
-    | VARIABLE  {:  :}
-    | expression {:  :};
+argument ::= ARGRU_NEG argument:a   {: RESULT = c.neg_argument(a); :}
+            | OBJECT:o              {: RESULT = PrimObj_Factory.get(o); :}
+            | VARIABLE:v            {: RESULT = c.load(v); :}
+            | expression:e          {: RESULT = e; :};
 

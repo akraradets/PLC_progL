@@ -48,18 +48,54 @@ public class Command {
         e.update(name, o);
     }
 
-
-    public  void condition () {        
-    }
-
-    public void variable () {
-        
-    }
-    
     public PrimObj load(String name) {
         Environment e = m.getEnvironment();
         return e.get(name);
     }
+
+    public PrimObj neg_argument (PrimObj o) {
+        if (o instanceof BoolPrim) {
+            //Boolean data_o = (Boolean)o.getData();
+            BoolPrim neg_data = (BoolPrim) o;
+            neg_data.setNeg();
+            return neg_data;
+        }
+        logger.error("Only [BoolPrim] is support for neg_argument");
+        throw new Error("Only [BoolPrim] is support for neg_argument");
+    }
+    
+    public PrimObj cond_and (PrimObj o1, PrimObj o2) {
+        
+        if (o1 instanceof BoolPrim) {
+            if (o2 instanceof BoolPrim) {
+                if ( (Boolean) o1.getData() && (Boolean) o2.getData() ) {
+                    return PrimObj_Factory.get(true);
+                }
+                return PrimObj_Factory.get(false);
+            }
+            logger.error("Only [BoolPrim] is support for cond_and(o2 is not BoolPrim)");
+            throw new Error("Only [BoolPrim] is support for cond_and(o2 is not BoolPrim)");
+        }
+        logger.error("Only [BoolPrim] is support for cond_and");
+        throw new Error("Only [BoolPrim] is support for cond_and");
+    }
+    
+    public PrimObj cond_or (PrimObj o1, PrimObj o2) {
+        
+        if (o1 instanceof BoolPrim) {
+            if (o2 instanceof BoolPrim) {
+                if ( (Boolean) o1.getData() || (Boolean) o2.getData() ) {
+                    return PrimObj_Factory.get(true);
+                }
+                return PrimObj_Factory.get(false);
+            }
+            logger.error("Only [BoolPrim] is support for cond_or(o2 is not BoolPrim)");
+            throw new Error("Only [BoolPrim] is support for cond_or(o2 is not BoolPrim)");
+        }
+        logger.error("Only [BoolPrim] is support for cond_or");
+        throw new Error("Only [BoolPrim] is support for cond_or");
+    }
+    
 
     public PrimObj plus(PrimObj p1, PrimObj p2) {
         return new IntPrim();
@@ -81,5 +117,13 @@ public class Command {
         logger.error("Only [IntPrim] is support for multiplication");
         throw new Error("Only [IntPrim] is support for multiplication");
     }
+
+//    public static void main(String[] args) {
+//        PrimObj a = PrimObj_Factory.get(new Boolean(true));
+//        Command c = Command.getInstance();
+//        c.neg_argument(a);
+//        System.out.println(a.toString());
+//        
+//    }
 
 }
