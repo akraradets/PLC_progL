@@ -24,7 +24,8 @@ terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 terminal String         VARIABLE;
 terminal Object         OBJECT;
 
-non terminal PrimObj    type, expression;
+non terminal ExpressionNode expression;
+non terminal PrimObj    type;
 non terminal            initial;
 non terminal List<Stmt> block;
 non terminal Stmt       statement;
@@ -39,14 +40,13 @@ precedence left IF;
 
 start with initial;
 
-initial ::= block:b {: Stmt.run(b); :};
+initial ::= expression:e           {: System.out.println("DONE"); e.getRoot().run(); :};
 
-block  ::= block:b statement:s  {: b.add(s); RESULT = b; :}
-        | {: RESULT = new LinkedList<Stmt>(); :};
-
-statement ::= SEPARATOR                     {: RESULT = Stmt.empty(); :}
-        | LBRANCE block:b RBRANCE           {: Stmt.run(b); RESULT = Stmt.empty(); :}
-        | type:p VARIABLE:v SEPARATOR       {: RESULT = Stmt.declare(v,p); :}
-        | IF block:b                        {: RESULT = Stmt.ifthen(false,b); :};
-
-type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
+expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2); :}
+             | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2); :}
+             | expression:e1 OPER_DIVIDE expression:e2  {: RESULT = ExpressionNode.divide(e1,e2); :}
+             | expression:e1 OPER_MULTI  expression:e2  {: RESULT = ExpressionNode.multi(e1,e2); :}
+             | LPAREN expression:e RPAREN   {: RESULT = e; :}
+             | OPER_MINUS expression:e {: RESULT = ExpressionNode.flipSign(e); :}
+             | OBJECT:o     {: RESULT = ExpressionNode.readObject(o); :}
+             | VARIABLE:v   {: System.out.println("var v"); :};
