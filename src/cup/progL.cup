@@ -51,6 +51,6 @@ expression ::= expression:e1 OPER_PLUS:oper   expression:e2  {: RESULT = c.plus(
              | expression:e1 OPER_DIVIDE:oper expression:e2  {: RESULT = c.divide(e1,e2); :}
              | expression:e1 OPER_MULTI:oper  expression:e2  {: RESULT = c.multiply(e1,e2); :}
              | LPAREN expression:e RPAREN   {: RESULT = e; :}
-             | OPER_MINUS expression:e {: RESULT = c.negative(e); :}
+             | OPER_MINUS expression:e {: RESULT = c.neg_expression(e); :}
              | OBJECT:o     {: RESULT = PrimObj_Factory.get(o); :}
              | VARIABLE:v   {: RESULT = c.load(v); :};

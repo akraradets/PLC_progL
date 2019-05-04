@@ -91,7 +91,7 @@ public class Command {
         throw new Error("Only [IntPrim] is support for multiplication");
     }
     
-    public PrimObj negative(PrimObj p){
+    public PrimObj neg_expression(PrimObj p){
          // only IntPrim is support
         if(p instanceof IntPrim){
             return new IntPrim((Integer)p.getData() * -1);
