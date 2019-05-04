@@ -145,10 +145,11 @@ public class Command {
     }
 
 //    public static void main(String[] args) {
-//        PrimObj a = PrimObj_Factory.get(new Boolean(true));
+//        PrimObj a1 = PrimObj_Factory.get(new Boolean(true));
+//        PrimObj a2 = PrimObj_Factory.get(new Boolean(true));
 //        Command c = Command.getInstance();
-//        c.neg_argument(a);
-//        System.out.println(a.toString());
+//        c.cond_or(a1,a2);
+//        System.out.println(c.toString());
 //        
 //    }
 
