@@ -14,6 +14,7 @@ import java.util.Hashtable;
 public class GenericNode {
     protected Hashtable<String,GenericNode> children = new Hashtable<String, GenericNode>();
     protected GenericNode parent;
+    protected String command;
     
     public void setParent(GenericNode parent){
         this.parent = parent;
@@ -43,5 +44,20 @@ public class GenericNode {
         }
         // return to parent
         return null;
+    }
+    
+    public void debug(){
+        GenericNode a = this.getRoot();
+        System.out.print(a.toString() + "->");
+        while(a.children.isEmpty() == false){
+            a = a.children.get("default");
+            System.out.print(a.toString() + "->");
+        }
+        System.out.println("");
+    }
+    
+    public String toString(){
+        String a = this.command;
+        return a;
     }
 }

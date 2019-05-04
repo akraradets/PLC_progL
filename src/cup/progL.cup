@@ -25,6 +25,7 @@ terminal String         VARIABLE;
 terminal Object         OBJECT;
 
 non terminal ExpressionNode expression;
+non terminal DeclareNode    declare;
 non terminal PrimObj    type;
 non terminal            initial;
 non terminal List<Stmt> block;
@@ -40,13 +41,16 @@ precedence left IF;
 
 start with initial;
 
-initial ::= expression:e           {: System.out.println("DONE"); e.getRoot().run(); :};
+initial ::= declare:d SEPARATOR expression:e           {: System.out.println("DONE"); d.getRoot().run(); e.getRoot().run(); :};
 
-expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2); :}
+declare ::= declare:d1 SEPARATOR declare:d2 {: d1.addChild(d2.getRoot()); RESULT = d2; :}
+        | VARIABLE:v ASSIGNER expression:e {: RESULT = DeclareNode.declare(v,e); RESULT.debug(); :};
+
+expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2); RESULT.debug(); :}
              | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2); :}
              | expression:e1 OPER_DIVIDE expression:e2  {: RESULT = ExpressionNode.divide(e1,e2); :}
              | expression:e1 OPER_MULTI  expression:e2  {: RESULT = ExpressionNode.multi(e1,e2); :}
              | LPAREN expression:e RPAREN   {: RESULT = e; :}
              | OPER_MINUS expression:e {: RESULT = ExpressionNode.flipSign(e); :}
-             | OBJECT:o     {: RESULT = ExpressionNode.readObject(o); :}
-             | VARIABLE:v   {: System.out.println("var v"); :};
+             | OBJECT:o     {: RESULT = ExpressionNode.readObject(o); RESULT.debug(); :}
+             | VARIABLE:v   {: RESULT = ExpressionNode.readVariable(v); RESULT.debug(); :};

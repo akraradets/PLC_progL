@@ -10,11 +10,13 @@ package src;
  * @author akrarads
  */
 public class ExpressionNode extends GenericNode {
-
-    private Integer value;
+    private Memory m = Memory.getInstance();
+    
+    public Integer value;
     private String command;
     private ExpressionNode e1, e2;
-
+    private String varname;
+    
     private ExpressionNode(Integer i) {
         this.command = "readObject";
         this.value = i;
@@ -33,14 +35,20 @@ public class ExpressionNode extends GenericNode {
         throw new Error("Expect object to be integer");
     }
 
+    public static ExpressionNode readVariable(String v){
+        ExpressionNode e = new ExpressionNode("readVariable");
+        e.varname = v;
+        return e;
+    }
+    
     public static ExpressionNode flipSign(ExpressionNode e_pre) {
         ExpressionNode e = new ExpressionNode("flipSign");
         e.e1 = e_pre;
         e_pre.addChild(e);
-        
+
         return e;
     }
-    
+
     public static ExpressionNode add(ExpressionNode e1, ExpressionNode e2) {
         e1.addChild(e2.getRoot());
         ExpressionNode e = new ExpressionNode("add");
@@ -58,7 +66,7 @@ public class ExpressionNode extends GenericNode {
         e.e2 = e2;
         return e;
     }
-    
+
     public static ExpressionNode multi(ExpressionNode e1, ExpressionNode e2) {
         e1.addChild(e2.getRoot());
         ExpressionNode e = new ExpressionNode("multi");
@@ -76,11 +84,18 @@ public class ExpressionNode extends GenericNode {
         e.e2 = e2;
         return e;
     }
-    
+
     public Object run() {
         System.out.println(this.command + " " + this.value);
         switch (command) {
             case "readObject":
+                break;
+            case "readVariable":
+                PrimObj p = m.findObject(this.varname);
+                if(p instanceof IntPrim == false){
+                    throw new Error("The variable <"+this.varname+"> is not type of IntPrim");
+                }
+                this.value = (Integer) p.getData();
                 break;
             case "add":
                 this.value = this.e1.value + this.e2.value;
@@ -96,7 +111,7 @@ public class ExpressionNode extends GenericNode {
                 break;
             case "flipSign":
                 this.value = this.e1.value * -1;
-                
+
         }
         System.out.println(this.value);
         if (this.children.isEmpty() == false) {
@@ -104,19 +119,15 @@ public class ExpressionNode extends GenericNode {
         }
         return null;
     }
-    
     public String toString(){
-        String a = this.command + ":" + this.value;
-        return a;
-    }
-    
-    public void debug(){
-        GenericNode a = this.getRoot();
-        System.out.print(a.toString() + "->");
-        while(a.children.isEmpty() == false){
-            a = a.children.get("default");
-            System.out.print(a.toString() + "->");
+        String a = "";
+        if(this.command == "readVariable"){
+            a = this.command + ":" + this.varname;
         }
-        System.out.println("");
+        else{
+            a = this.command + ":" + this.value;
+        }
+        
+        return a;
     }
 }
