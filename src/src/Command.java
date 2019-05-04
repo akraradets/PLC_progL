@@ -24,7 +24,7 @@ public class Command {
 
     public static Command getInstance() {
         if (instance == null) {
-            synchronized (Memory.class) {
+            synchronized (Command.class) {
                 if (instance == null) {
                     instance = new Command();
                 }

@@ -39,6 +39,7 @@ initial ::= statement:s SEPARATOR           {:  :};
 
 statement ::= statement:s1 SEPARATOR statement:s2   {: :}
           | declare:d                               {: :}
+          | IF LPAREN RPAREN {: return; :} statement:s {: System.out.println("asd"); :}
           | VARIABLE:v ASSIGNER expression:e        {: c.assign(v,e); :};
 
 declare ::= type:p VARIABLE:v                       {: c.declare(v,p);   :}
@@ -46,14 +47,15 @@ declare ::= type:p VARIABLE:v                       {: c.declare(v,p);   :}
 
 type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
 
-expression ::= expression:e1 OPER_PLUS:oper   expression:e2  {: RESULT = c.plus(e1,e2); :}
-             | expression:e1 OPER_MINUS:oper  expression:e2  {: RESULT = c.minus(e1,e2); :}
-             | expression:e1 OPER_DIVIDE:oper expression:e2  {: RESULT = c.divide(e1,e2); :}
-             | expression:e1 OPER_MULTI:oper  expression:e2  {: RESULT = c.multiply(e1,e2); :}
+expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = c.plus(e1,e2); :}
+             | expression:e1 OPER_MINUS  expression:e2  {: RESULT = c.minus(e1,e2); :}
+             | expression:e1 OPER_DIVIDE expression:e2  {: RESULT = c.divide(e1,e2); :}
+             | expression:e1 OPER_MULTI  expression:e2  {: RESULT = c.multiply(e1,e2); :}
              | LPAREN expression:e RPAREN   {: RESULT = e; :}
              | OPER_MINUS expression:e {: RESULT = c.neg_expression(e); :}
              | OBJECT:o     {: RESULT = PrimObj_Factory.get(o); :}
              | VARIABLE:v   {: RESULT = c.load(v); :};
+
 
 if ::= if LPARAN condition:c RPARAN statement:s  {: :}
     | if LPARAN condition:c RPARAN statement:s1 else statement:s2 {: :}
