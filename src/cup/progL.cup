@@ -25,11 +25,9 @@ terminal String         VARIABLE;
 terminal Object         OBJECT;
 
 non terminal ExpressionNode expression;
-non terminal DeclareNode    declare;
+non terminal StatementNode  statement,declare;
 non terminal PrimObj    type;
 non terminal            initial;
-non terminal List<Stmt> block;
-non terminal Stmt       statement;
 
 /* Precedences */
 precedence left SEPARATOR, ASSIGNER;
@@ -41,16 +39,20 @@ precedence left IF;
 
 start with initial;
 
-initial ::= declare:d SEPARATOR expression:e           {: System.out.println("DONE"); d.getRoot().run(); e.getRoot().run(); :};
+initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.debug(); s.getRoot().run(); :};
 
-declare ::= declare:d1 SEPARATOR declare:d2 {: d1.addChild(d2.getRoot()); RESULT = d2; :}
-        | VARIABLE:v ASSIGNER expression:e {: RESULT = DeclareNode.declare(v,e); RESULT.debug(); :};
+statement ::= statement:s1 SEPARATOR statement:s2   {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
+          | declare:d                               {: RESULT = d;   :}
+          | VARIABLE:v ASSIGNER expression:e        {: RESULT = StatementNode.assign(v,e); :};
 
-expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2); RESULT.debug(); :}
-             | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2); :}
+declare ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
+          | PRIMITIVE:p VARIABLE:v ASSIGNER expression:e  {: RESULT = StatementNode.declare(p,v,e); :};
+
+expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2);    :}
+             | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2);  :}
              | expression:e1 OPER_DIVIDE expression:e2  {: RESULT = ExpressionNode.divide(e1,e2); :}
-             | expression:e1 OPER_MULTI  expression:e2  {: RESULT = ExpressionNode.multi(e1,e2); :}
+             | expression:e1 OPER_MULTI  expression:e2  {: RESULT = ExpressionNode.multi(e1,e2);  :}
              | LPAREN expression:e RPAREN   {: RESULT = e; :}
              | OPER_MINUS expression:e {: RESULT = ExpressionNode.flipSign(e); :}
-             | OBJECT:o     {: RESULT = ExpressionNode.readObject(o); RESULT.debug(); :}
-             | VARIABLE:v   {: RESULT = ExpressionNode.readVariable(v); RESULT.debug(); :};
+             | OBJECT:o     {: RESULT = ExpressionNode.readObject(o); :}
+             | VARIABLE:v   {: RESULT = ExpressionNode.readVariable(v); :};

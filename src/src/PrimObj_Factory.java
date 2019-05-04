@@ -42,6 +42,10 @@ public class PrimObj_Factory {
         }
     }
     
+    public static PrimObj get(PrimObj p) {
+        return p;
+    }
+    
     public static PrimObj get(Object o){
         if(o instanceof Integer){
             return new IntPrim((int) o);

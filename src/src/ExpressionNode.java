@@ -5,21 +5,23 @@
  */
 package src;
 
+import src.logger.Logger;
+
 /**
  *
  * @author akrarads
  */
 public class ExpressionNode extends GenericNode {
     private Memory m = Memory.getInstance();
-    
-    public Integer value;
+    private Logger logger = new Logger("ExpressionNode");
+    public PrimObj value;
     private String command;
     private ExpressionNode e1, e2;
     private String varname;
     
-    private ExpressionNode(Integer i) {
+    private ExpressionNode(Object o) {
         this.command = "readObject";
-        this.value = i;
+        this.value = PrimObj_Factory.get(o);
     }
 
     private ExpressionNode(String command) {
@@ -28,11 +30,7 @@ public class ExpressionNode extends GenericNode {
     }
 
     public static ExpressionNode readObject(Object o) {
-        if (o instanceof Integer) {
-            System.out.println(o.toString());
-            return new ExpressionNode((Integer) o);
-        }
-        throw new Error("Expect object to be integer");
+        return new ExpressionNode(o);
     }
 
     public static ExpressionNode readVariable(String v){
@@ -86,34 +84,32 @@ public class ExpressionNode extends GenericNode {
     }
 
     public Object run() {
-        System.out.println(this.command + " " + this.value);
+        logger.debug(this.command + " " + this.value);
         switch (command) {
             case "readObject":
                 break;
             case "readVariable":
-                PrimObj p = m.findObject(this.varname);
-                if(p instanceof IntPrim == false){
-                    throw new Error("The variable <"+this.varname+"> is not type of IntPrim");
-                }
-                this.value = (Integer) p.getData();
+                this.value = m.findObject(this.varname);
                 break;
             case "add":
-                this.value = this.e1.value + this.e2.value;
+                this.value = add(this.e1.value, this.e2.value);
                 break;
             case "minus":
-                this.value = this.e1.value - this.e2.value;
+                this.value = minus(this.e1.value, this.e2.value);
                 break;
             case "multi":
-                this.value = this.e1.value * this.e2.value;
+                this.value = multi(this.e1.value, this.e2.value);
                 break;
             case "divide":
-                this.value = this.e1.value / this.e2.value;
+                this.value = divide(this.e1.value, this.e2.value);
                 break;
             case "flipSign":
-                this.value = this.e1.value * -1;
+                this.value = flipSign(this.e1.value);
+                // this.value = this.e1.value * -1;
+                break;
 
         }
-        System.out.println(this.value);
+        // logger.debug(this.value);
         if (this.children.isEmpty() == false) {
             children.get("default").run();
         }
@@ -129,5 +125,54 @@ public class ExpressionNode extends GenericNode {
         }
         
         return a;
+    }
+    
+    
+    /* From command section */
+    private PrimObj add(PrimObj p1, PrimObj p2) {
+        // only IntPrim is support
+        if(p1 instanceof IntPrim && p2 instanceof IntPrim){
+            return new IntPrim((Integer)p1.getData() + (Integer)p2.getData());
+        }
+        else if(p1 instanceof StrPrim && p2 instanceof StrPrim){
+            return new StrPrim(p1,p2);
+        }
+        logger.error("Only [IntPrim,IntPrim] or [StrPrim,StrPrim] is support for addition");
+        throw new Error("Only [IntPrim,IntPrim] or [StrPrim,StrPrim] is support for addition");
+    }
+    private PrimObj minus(PrimObj p1, PrimObj p2) {
+        // only IntPrim is support
+        if(p1 instanceof IntPrim && p2 instanceof IntPrim){
+            return new IntPrim((Integer)p1.getData() - (Integer)p2.getData());
+        }
+        logger.error("Only [IntPrim] is support for subtraction");
+        throw new Error("Only [IntPrim] is support for subtraction");
+    }
+
+    private PrimObj divide(PrimObj p1, PrimObj p2) {
+        // only IntPrim is support
+        if(p1 instanceof IntPrim && p2 instanceof IntPrim){
+            return new IntPrim((Integer)p1.getData() / (Integer)p2.getData());
+        }
+        logger.error("Only [IntPrim] is support for divide");
+        throw new Error("Only [IntPrim] is support for divide");
+    }
+
+    private PrimObj multi(PrimObj p1, PrimObj p2) {
+        // only IntPrim is support
+        if(p1 instanceof IntPrim && p2 instanceof IntPrim){
+            return new IntPrim((Integer)p1.getData() * (Integer)p2.getData());
+        }
+        logger.error("Only [IntPrim] is support for multiplication");
+        throw new Error("Only [IntPrim] is support for multiplication");
+    }
+    
+    private PrimObj flipSign(PrimObj p){
+         // only IntPrim is support
+        if(p instanceof IntPrim){
+            return new IntPrim((Integer)p.getData() * -1);
+        }
+        logger.error("Only [IntPrim] is support for multiplication");
+        throw new Error("Only [IntPrim] is support for multiplication");       
     }
 }

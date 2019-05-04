@@ -14,15 +14,28 @@ public class DeclareNode extends GenericNode {
     private Memory m = Memory.getInstance();
     private String value;
     private ExpressionNode e;
-
-    private DeclareNode(String command, String name, ExpressionNode e) {
+    private String type;
+    
+    private DeclareNode(String command, String type, String name, ExpressionNode e) {
         this.command = command;
         this.value = name;
         this.e = e;
+        this.type = type;
     }
-
-    public static DeclareNode declare(String name, ExpressionNode e) {
-        DeclareNode d = new DeclareNode("declare", name, e);
+    
+    private DeclareNode(String command, String type, String name) {
+        this.command = command;
+        this.value = name;
+        this.type = type;
+    }
+    
+    public static DeclareNode allocate(String type, String name) {
+        DeclareNode d = new DeclareNode("allocate", type , name);
+        return d;
+    }
+    
+    public static DeclareNode declare(String type, String name, ExpressionNode e) {
+        DeclareNode d = new DeclareNode("declare", type , name, e);
         e.addChild(d);
         return d;
     }
@@ -32,7 +45,12 @@ public class DeclareNode extends GenericNode {
         Environment table = m.getEnvironment();
         switch (this.command) {
             case "declare":
-                table.put(this.value, PrimObj_Factory.get(this.e.value));
+                PrimObj p = PrimObj_Factory.get(this.type);
+                p.setData(e.value);
+                table.put(this.value, p);
+                break;
+            case "allocate":
+                table.put(this.value, PrimObj_Factory.get(this.type));
                 break;
 
         }
