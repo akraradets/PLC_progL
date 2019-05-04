@@ -34,12 +34,6 @@ public class BoolPrim extends PrimObj {
         this.data = !data;
     }
     
-    
-
-    public void setNeg(){
-        this.data = !data;
-    }
-    
     @Override
     public void setData(Object o) {
         data = cast(o);
