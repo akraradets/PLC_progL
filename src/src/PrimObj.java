@@ -13,7 +13,7 @@ import src.logger.Logger;
  *
  * @author akrarads
  */
-public abstract class PrimObj {
+public abstract class PrimObj{
 
     private String type;
     private Object data;

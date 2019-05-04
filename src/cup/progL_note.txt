@@ -16,9 +16,9 @@ action code {:
 // Primitive set
 terminal String         PRIMITIVE;
 // TOKEN set
-terminal                ASSIGNER, SEPARATOR, LPARAN, RPARAN;
+terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN;
 // Operation set
-terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
+terminal String         OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // LEXEME set
 terminal String         VARIABLE;
 terminal Object         OBJECT;
@@ -28,7 +28,7 @@ non terminal            initial, declare, statement;
 
 /* Precedences */
 precedence left COMPATOR;
-precedence left SEPARATOR;
+precedence left SEPARATOR, ASSIGNER;
 precedence left OPER_PLUS, OPER_MINUS;
 precedence left OPER_DIVIDE, OPER_MULTI;
 
@@ -36,25 +36,25 @@ precedence left OPER_DIVIDE, OPER_MULTI;
 
 start with initial;
 
-initial ::= declare:d SEPARATOR           {:  :}
-          | declare:d SEPARATOR statement:s SEPARATOR{:  :};
+initial ::= statement:s SEPARATOR           {:  :};
 
-declare ::= declare:d1 SEPARATOR declare:d2           {:                   :}
-          | type:p VARIABLE:v                    {: c.declare(v,p);   :}
-          | type:p VARIABLE:v ASSIGNER OBJECT:o  {: c.declare(v,p,o); :};
+statement ::= statement:s1 SEPARATOR statement:s2   {: :}
+          | declare:d                               {: :}
+          | VARIABLE:v ASSIGNER expression:e        {: c.assign(v,e); :};
+
+declare ::= type:p VARIABLE:v                       {: c.declare(v,p);   :}
+          | type:p VARIABLE:v1 ASSIGNER expression:e {: c.declare(v1,p,e); :};
 
 type ::= PRIMITIVE:p {: RESULT = PrimObj_Factory.get(p); :};
 
-statement ::= statement:s1 SEPARATOR statement:s2   {: :}
-          | VARIABLE:v ASSIGNER expression:e        {:  :};
-
-expression ::= expression:e1 OPER_PLUS expression:e2  {: :}
-          | expression:e1 OPER_MINUS expression:e2  {: :}
-          | expression:e1 OPER_DIVIDE expression:e2  {: :}
-          | expression:e1 OPER_MULTI expression:e2  {: :}
-          | LPAREN expression:e RPAREN {: :}
-          | OBJECT:o    {: :}
-          | VARIABLE:v  {: :};
+expression ::= expression:e1 OPER_PLUS:oper   expression:e2  {: RESULT = c.plus(e1,e2); :}
+             | expression:e1 OPER_MINUS:oper  expression:e2  {: RESULT = c.minus(e1,e2); :}
+             | expression:e1 OPER_DIVIDE:oper expression:e2  {: RESULT = c.divide(e1,e2); :}
+             | expression:e1 OPER_MULTI:oper  expression:e2  {: RESULT = c.multiply(e1,e2); :}
+             | LPAREN expression:e RPAREN   {: RESULT = e; :}
+             | OPER_MINUS expression:e {: RESULT = c.neg_expression(e); :}
+             | OBJECT:o     {: RESULT = PrimObj_Factory.get(o); :}
+             | VARIABLE:v   {: RESULT = c.load(v); :};
 
 if ::= if LPARAN condition:c RPARAN statement:s  {: :}
     | if LPARAN condition:c RPARAN statement:s1 else statement:s2 {: :}
