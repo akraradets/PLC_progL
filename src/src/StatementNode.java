@@ -22,7 +22,7 @@ public class StatementNode extends GenericNode {
     private StatementNode s;
     private String libname;
     private ConditionNode argv;
-    
+
     // From Decalre
     private StatementNode(String command, String type, String name, ExpressionNode e) {
         this.command = command;
@@ -30,24 +30,24 @@ public class StatementNode extends GenericNode {
         this.e = e;
         this.type = type;
     }
-    
+
     private StatementNode(String command, String type, String name) {
         this.command = command;
         this.value = name;
         this.type = type;
     }
-    
+
     public static StatementNode allocate(String type, String name) {
-        StatementNode d = new StatementNode("allocate", type , name);
+        StatementNode d = new StatementNode("allocate", type, name);
         return d;
     }
-    
+
     public static StatementNode declare(String type, String name, ExpressionNode e) {
-        StatementNode d = new StatementNode("declare", type , name, e);
+        StatementNode d = new StatementNode("declare", type, name, e);
         e.addChild(d);
         return d;
     }
-    
+
     // New
     private StatementNode(String command) {
         this.command = command;
@@ -69,68 +69,82 @@ public class StatementNode extends GenericNode {
         return new StatementNode("assign", name, e);
     }
 
-    public static StatementNode ifthen(ConditionNode c, StatementNode s){
+    public static StatementNode ifthen(ConditionNode c, StatementNode s) {
         StatementNode ifthen = new StatementNode("ifthen");
         ifthen.c = c;
-        System.out.println(c.toString());
-        ifthen.addChild("true", s);
+        c.debug();
+        s.debug();
+        ifthen.addChild("true", s.getRoot());
         return ifthen;
     }
-    
-    public static StatementNode library(String libname, ConditionNode c){
+
+    public static StatementNode library(String libname, ConditionNode c) {
         StatementNode library = new StatementNode("library");
         library.libname = libname;
         library.argv = c;
         c.addChild(library);
         return library;
     }
-    
+
     public Object run() {
         Environment table = m.getEnvironment();
+        System.out.println("RUNNNNNNNNNNN command:"+this.command);
         switch (this.command) {
             // from declare
             case "declare":
                 PrimObj p = PrimObj_Factory.get(this.type);
                 p.setData(e.value);
                 table.put(this.value, p);
+                logger.debug("command:" + this.command + " name:"+this.value+" value:" + p.toString());
                 break;
             case "allocate":
                 table.put(this.value, PrimObj_Factory.get(this.type));
+                logger.debug("command:" + this.command + " name:"+this.value);
                 break;
             // new
             case "empty":
                 logger.debug(this.command);
                 break;
             case "ifthen":
-                logger.debug("command:"+this.command);
-                if(ifthen(this.c)){
-                    logger.debug("command:"+this.command + ":: true");
+                logger.debug("command:" + this.command);
+                if (ifthen(this.c)) {
+                    logger.debug("command:" + this.command + ":: true");
                     children.get("true").run();
                 }
                 break;
             case "library":
-                logger.debug("command:"+this.command+" Libname:"+this.libname);
-                
-                if(this.libname.equals("print")){
+                logger.debug("command:" + this.command + " Libname:" + this.libname);
+
+                if (this.libname.equals("print")) {
                     logger.debug(this.argv.toString());
-                    UI.output = UI.output + this.argv.value.getData() +"\n";
+                    UI.output = UI.output + this.argv.value.getData() + "\n";
                 }
                 break;
-                
+
             default:
-                logger.error("command:"+this.command+" is not match");
+                logger.error("command:" + this.command + " is not match");
                 break;
         }
-        if (!children.isEmpty()) {
+        if (children.containsKey("default")) {
             children.get("default").run();
         }
         // return to parent
         return null;
     }
-    
-    private Boolean ifthen(ConditionNode c){
+
+    public String toString() {
+        if (this.command.equals("ifthen")) {
+            String a = "ifthen [true]:"+this.children.get("true").toString()+"[default]";
+            return a;
+        } else {
+            String a = this.command;
+            return a;
+        }
+    }
+
+    private Boolean ifthen(ConditionNode c) {
         c.run();
-        if(c.value instanceof BoolPrim){
+        if (c.value instanceof BoolPrim) {
             return (Boolean) c.value.getData();
         }
         logger.error("ConditionNode did not load with BoolPrim " + c.value.getClass());

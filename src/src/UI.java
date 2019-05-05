@@ -6,6 +6,8 @@
 package src;
 
 import java.io.ByteArrayInputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -111,14 +113,18 @@ public class UI extends javax.swing.JFrame {
         m.init();
         // run program
         UI.output = "";
-        this.run();
+        try {
+            this.run();
+        } catch (Exception ex) {
+            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         // debug
         m.dumpMemory();
         System.out.println("---------------------- DONE ------------------\n");
     }//GEN-LAST:event_buttonRunActionPerformed
 
-    private void run(){
+    private void run() throws Exception{
         System.out.println("---------------------- RUN ------------------");
         // Check if infix
         String inputString = inputText.getText();
@@ -128,6 +134,7 @@ public class UI extends javax.swing.JFrame {
         } catch (Exception ex) {
             System.err.println("------------------ BROKEN -------------------");
             System.err.println(ex);
+            throw ex;
         }
         printOutput();
     }
