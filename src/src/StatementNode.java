@@ -16,6 +16,7 @@ public class StatementNode extends GenericNode {
     private Memory m = Memory.getInstance();
     private Logger logger = new Logger("StatementNode");
     public String value;
+    
     public String type;
     
     private ExpressionNode e;
@@ -23,6 +24,7 @@ public class StatementNode extends GenericNode {
     private StatementNode s;
     private String libname;
     public ConditionNode argv;
+    private String funcName;
     private StatementNode funcBody;
     private StatementNode funcParam;
 
@@ -62,7 +64,7 @@ public class StatementNode extends GenericNode {
         c.addChild(d);
         return d;
     }
-
+    
     // New
     private StatementNode(String command) {
         this.command = command;
@@ -110,11 +112,17 @@ public class StatementNode extends GenericNode {
 
     public static StatementNode functionCall(String funcName, ConditionNode a){
         StatementNode func = new StatementNode("functionCall");
-        func.value = funcName;
+        func.funcName = funcName;
         func.argv = a;
         return func;
     }
-    
+    public static StatementNode assignFunction(String varName, String funcName, ConditionNode a){
+        StatementNode func = new StatementNode("assignFunction");
+        func.value = varName;
+        func.funcName = funcName;
+        func.argv = a;
+        return func;
+    }    
     public static StatementNode functionReturn(ConditionNode a){
         StatementNode ret = new StatementNode("functionReturn");
         ret.value = "return";
@@ -183,8 +191,18 @@ public class StatementNode extends GenericNode {
                 break;
             case "functionCall":
                 this.argv.getRoot().run();
-                logger.debug("command:" + this.command + " FuncName:" + this.value + " Argv:"+this.argv.value.toString());
-                invoke(this.value,this.argv);
+                logger.debug("command:" + this.command + " FuncName:" + this.funcName + " Argv:"+this.argv.value.toString());
+                invoke(this.funcName,this.argv);
+                break;
+            case "assignFunction":
+                // function call
+                this.argv.getRoot().run();
+                logger.debug("command:" + this.command + " FuncName:" + this.funcName + " Argv:"+this.argv.value.toString());
+                // Now get result
+                PrimObj result = invoke(this.funcName,this.argv);
+                // assign to varivale
+                table.update(this.value, result);
+                logger.debug("command:" + this.command + " name:" + this.value + " value:" + result.toString());
                 break;
             case "functionReturn":
                 this.argv.getRoot().run();
@@ -226,9 +244,11 @@ public class StatementNode extends GenericNode {
         throw new Error("ConditionNode did not load with BoolPrim");
     }
     
-    private void invoke(String funcName, ConditionNode argv){
+    private PrimObj invoke(String funcName, ConditionNode argv){
         FunctionNode f = m.findFunction(funcName);
         f.argv = argv;
         f.run();
+        return  f.output;
+        
     }
 }

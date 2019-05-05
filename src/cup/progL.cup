@@ -64,6 +64,8 @@ statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoo
             LBRANCE statement:s SEPARATOR RBRANCE 
                                                         {: RESULT = StatementNode.whileloop(c,s); :}
           | VARIABLE:v ASSIGNER argument:a              {: RESULT = StatementNode.assign(v,a); :}
+          | VARIABLE:v ASSIGNER VARIABLE:f LPAREN argument:a RPAREN 
+                                                        {: RESULT = StatementNode.assignFunction(v,f,a); :}
           | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:}
           | VARIABLE:v LPAREN argument:a RPAREN         {: RESULT = StatementNode.functionCall(v,a);:};
 
