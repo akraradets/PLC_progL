@@ -67,7 +67,8 @@ statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoo
           | VARIABLE:v LPAREN argument:a RPAREN         {: RESULT = StatementNode.functionCall(v,a);:};
 
 declare_var ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
-              | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a    {: RESULT = StatementNode.declare_var(p,v,a); :};
+              | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a    {: RESULT = StatementNode.declare_var(p,v,a); :}
+              |                                               {: RESULT = StatementNode.empty(); :};
 
 declare_func ::= FUNCTION VARIABLE:v LPAREN declare_var:d RPAREN
                  LBRANCE statement:s SEPARATOR RBRANCE
@@ -80,7 +81,8 @@ expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNo
              | LPAREN expression:e RPAREN   {: RESULT = e; :}
              | OPER_MINUS expression:e      {: RESULT = ExpressionNode.flipSign(e);     :}
              | OBJECT:o                     {: RESULT = ExpressionNode.readObject(o);   :}
-             | VARIABLE:v                   {: RESULT = ExpressionNode.readVariable(v); :};
+             | VARIABLE:v                   {: RESULT = ExpressionNode.readVariable(v); :}
+             |                              {: RESULT = ExpressionNode.readEmpty();     :};
 
 
 condition ::= condition:c1 COND_AND condition:c2 {: RESULT = ConditionNode.cond_and(c1,c2); :}

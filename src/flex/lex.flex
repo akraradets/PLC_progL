@@ -47,7 +47,7 @@ import java_cup.runtime.*;
 LineTerminator  = \r | \n | \r\n
 WhiteSpace      = {LineTerminator} | [ \t\f]
 Text            = [\"]([^\"])*[\"]
-Primitive       = (int)|(bool)|(string)
+Primitive       = (int)|(bool)|(string)|(null)
 Boolean         = (true)|(false)
 While           = (while)
 Function        = (function)
