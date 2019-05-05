@@ -3,9 +3,7 @@ function f(int x){
     x = x - 1;
     if(x > 0){
         f(x);
-    }
-    else{
-        print(x);
     };
+    print(x);
 };
 f(x);
