@@ -24,6 +24,7 @@ terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 terminal                COND_AND, COND_OR;
 // Comparator set
 terminal                COMP_EQUAL, COMP_LESSTHAN, COMP_MORETHAN, COMP_MOREorEQUAL, COMP_LESSorEQUAL;
+
 // Argument set
 terminal                ARGRU_NEG;
 // LEXEME set
@@ -40,7 +41,7 @@ non terminal            initial;
 precedence left SEPARATOR, ASSIGNER;
 precedence left OPER_PLUS, OPER_MINUS;
 precedence left OPER_DIVIDE, OPER_MULTI;
-precedence left IF;
+precedence left IF,LPAREN, RPAREN, COND_AND;
 
 /* ------------Grammar rules----------- */
 
@@ -48,9 +49,10 @@ start with initial;
 
 initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.debug(); s.getRoot().run(); :};
 
-statement ::= statement:s1 SEPARATOR statement:s2   {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
-          | declare:d                               {: RESULT = d;   :}
-          | VARIABLE:v ASSIGNER expression:e        {: RESULT = StatementNode.assign(v,e); :};
+statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
+          | declare:d                                   {: RESULT = d;   :}
+          | IF LPAREN condition:c RPAREN statement:s    {: RESULT = StatementNode.ifthen(c,s); :}
+          | VARIABLE:v ASSIGNER expression:e            {: RESULT = StatementNode.assign(v,e); :};
 
 declare ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
           | PRIMITIVE:p VARIABLE:v ASSIGNER expression:e  {: RESULT = StatementNode.declare(p,v,e); :};
@@ -60,15 +62,13 @@ expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNo
              | expression:e1 OPER_DIVIDE expression:e2  {: RESULT = ExpressionNode.divide(e1,e2); :}
              | expression:e1 OPER_MULTI  expression:e2  {: RESULT = ExpressionNode.multi(e1,e2);  :}
              | LPAREN expression:e RPAREN   {: RESULT = e; :}
-             | OPER_MINUS expression:e {: RESULT = ExpressionNode.flipSign(e); :}
-             | OBJECT:o     {: RESULT = ExpressionNode.readObject(o); :}
-             | VARIABLE:v   {: RESULT = ExpressionNode.readVariable(v); :};
+             | OPER_MINUS expression:e      {: RESULT = ExpressionNode.flipSign(e);     :}
+             | OBJECT:o                     {: RESULT = ExpressionNode.readObject(o);   :}
+             | VARIABLE:v                   {: RESULT = ExpressionNode.readVariable(v); :};
 
 
-condition ::= condition:c1 COND_AND condition:c2 {: RESULT = ConditionNode.cond_and(c1,c2);   :}
+condition ::= condition:c1 COND_AND condition:c2 {: RESULT = ConditionNode.cond_and(c1,c2); :}
           |   argument:a                         {: RESULT = a; :};
 
 argument ::= ARGRU_NEG argument:a   {: RESULT = ConditionNode.flipArgument(a);   :}
-            | OBJECT:o              {: RESULT = ConditionNode.readObject(o);     :}
-            | VARIABLE:v            {: RESULT = ConditionNode.readVariable(v);   :}
             | expression:e          {: RESULT = ConditionNode.evalExpression(e); :};
