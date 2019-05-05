@@ -20,6 +20,8 @@ public class StatementNode extends GenericNode {
     private String type;
     private ConditionNode c;
     private StatementNode s;
+    private String libname;
+    private ConditionNode argv;
     
     // From Decalre
     private StatementNode(String command, String type, String name, ExpressionNode e) {
@@ -75,6 +77,14 @@ public class StatementNode extends GenericNode {
         return ifthen;
     }
     
+    public static StatementNode library(String libname, ConditionNode c){
+        StatementNode library = new StatementNode("library");
+        library.libname = libname;
+        library.argv = c;
+        c.addChild(library);
+        return library;
+    }
+    
     public Object run() {
         Environment table = m.getEnvironment();
         switch (this.command) {
@@ -96,6 +106,14 @@ public class StatementNode extends GenericNode {
                 if(ifthen(this.c)){
                     logger.debug("command:"+this.command + ":: true");
                     children.get("true").run();
+                }
+                break;
+            case "library":
+                logger.debug("command:"+this.command+" Libname:"+this.libname);
+                
+                if(this.libname.equals("print")){
+                    logger.debug(this.argv.toString());
+                    UI.output = UI.output + this.argv.value.getData() +"\n";
                 }
                 break;
                 

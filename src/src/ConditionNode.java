@@ -67,18 +67,21 @@ public class ConditionNode extends GenericNode {
     
     
     public Object run() {
-        logger.debug(this.command + " " + this.value);
         switch (command) {
             case "readObject":
+                logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "readVariable":
                 this.value = m.findObject(this.varname);
+                logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "flipArgument":
                 this.value = flipArgument(this.e1.value);
+                logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "evalExpression":
                 this.value = this.e1.value;
+                logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             default:
                 logger.error("command:"+this.command+" is not match");

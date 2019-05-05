@@ -49,6 +49,7 @@ WhiteSpace      = {LineTerminator} | [ \t\f]
 Text            = [\"]([^\"])*[\"]
 Primitive       = (int)|(bool)|(string)
 Boolean         = (true)|(false)
+Library         = (print)
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
 Integer         = [0-9][0-9]*
 
@@ -83,10 +84,11 @@ Integer         = [0-9][0-9]*
 "!"  { debug("ARGRU_NEG", yytext());   return symbol(sym.ARGRU_NEG, new String(yytext())); }
 // primitive
 {Primitive} { debug("PRIMITIVE", yytext()); return symbol(sym.PRIMITIVE, new String(yytext())); }
-{Boolean}  { debug("BOOLEAN",yytext());  return symbol(sym.OBJECT, new Boolean(yytext())); }
-{Variable} { debug("VARIABLE",yytext()); return symbol(sym.VARIABLE, new String(yytext())); }
-{Integer}  { debug("NUMBER",yytext());   return symbol(sym.OBJECT, new Integer(yytext()));  }
-{Text}     { debug("TEXT",yytext());     return symbol(sym.OBJECT, new String(yytext()));  }
+{Boolean}   { debug("BOOLEAN",yytext());  return symbol(sym.OBJECT, new Boolean(yytext())); }
+{Library}   { debug("LIBRARY",yytext());  return symbol(sym.LIBRARY, new String(yytext()));  }
+{Variable}  { debug("VARIABLE",yytext()); return symbol(sym.VARIABLE, new String(yytext())); }
+{Integer}   { debug("NUMBER",yytext());   return symbol(sym.OBJECT, new Integer(yytext()));  }
+{Text}      { debug("TEXT",yytext());     return symbol(sym.OBJECT, new String(yytext()));  }
 
 {WhiteSpace}    { /* just skip what was found, do nothing */ }
 /* ERROR */

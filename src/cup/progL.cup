@@ -15,7 +15,7 @@ action code {:
 :};
 /* ------------Grammar symbol declarations----------- */
 // Primitive set
-terminal String         PRIMITIVE;
+terminal String         PRIMITIVE, LIBRARY;
 // TOKEN set
 terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE;
 // Operation set
@@ -52,7 +52,8 @@ initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.deb
 statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
           | declare:d                                   {: RESULT = d;   :}
           | IF LPAREN condition:c RPAREN statement:s    {: RESULT = StatementNode.ifthen(c,s); :}
-          | VARIABLE:v ASSIGNER expression:e            {: RESULT = StatementNode.assign(v,e); :};
+          | VARIABLE:v ASSIGNER expression:e            {: RESULT = StatementNode.assign(v,e); :}
+          | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:};
 
 declare ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
           | PRIMITIVE:p VARIABLE:v ASSIGNER expression:e  {: RESULT = StatementNode.declare(p,v,e); :};

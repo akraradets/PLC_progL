@@ -16,6 +16,7 @@ public class UI extends javax.swing.JFrame {
     /**
      * Creates new form UI
      */
+    public static String output = "";
     public UI() {
         initComponents();
     }
@@ -109,6 +110,7 @@ public class UI extends javax.swing.JFrame {
         // Clean the memory
         m.init();
         // run program
+        UI.output = "";
         this.run();
         
         // debug
@@ -127,11 +129,11 @@ public class UI extends javax.swing.JFrame {
             System.err.println("------------------ BROKEN -------------------");
             System.err.println(ex);
         }
-        printOutput(inputText.getText());
+        printOutput();
     }
     
-    private void printOutput(String t){
-        outputText.setText(t);
+    public void printOutput(){
+        outputText.setText(output);
         
     }
     /**
