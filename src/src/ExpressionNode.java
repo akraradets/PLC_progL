@@ -19,6 +19,7 @@ public class ExpressionNode extends GenericNode {
     private ExpressionNode e1, e2;
     private String varname;
     
+    
     private ExpressionNode(Object o) {
         this.command = "readObject";
         this.value = PrimObj_Factory.get(o);
@@ -33,6 +34,12 @@ public class ExpressionNode extends GenericNode {
         return new ExpressionNode(o);
     }
 
+    public static ExpressionNode readEmpty() {
+        ExpressionNode e = new ExpressionNode("readEmpty");
+        e.value = PrimObj_Factory.get("null");
+        return e;
+    }
+    
     public static ExpressionNode readVariable(String v){
         ExpressionNode e = new ExpressionNode("readVariable");
         e.varname = v;

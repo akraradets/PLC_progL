@@ -51,6 +51,7 @@ initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.deb
 
 statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
           | declare_var:d                               {: RESULT = d; :}
+          | declare_func:d                              {: RESULT = d; :}
           | IF LPAREN condition:c RPAREN 
             LBRANCE statement:s SEPARATOR RBRANCE       
                                                         {: RESULT = StatementNode.ifthen(c,s); :}
@@ -62,10 +63,16 @@ statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoo
             LBRANCE statement:s SEPARATOR RBRANCE 
                                                         {: RESULT = StatementNode.whileloop(c,s); :}
           | VARIABLE:v ASSIGNER argument:a              {: RESULT = StatementNode.assign(v,a); :}
-          | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:};
+          | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:}
+          | VARIABLE:v LPAREN argument:a RPAREN         {: RESULT = StatementNode.functionCall(v,a);:};
 
 declare_var ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
-              | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a    {: RESULT = StatementNode.declare_var(p,v,a); :};
+              | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a    {: RESULT = StatementNode.declare_var(p,v,a); :}
+              |                                               {: RESULT = StatementNode.empty(); :};
+
+declare_func ::= FUNCTION VARIABLE:v LPAREN declare_var:d RPAREN
+                 LBRANCE statement:s SEPARATOR RBRANCE
+                                                        {: RESULT = StatementNode.declare_func(v,d,s); :};
 
 expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2);    :}
              | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2);  :}
@@ -74,7 +81,8 @@ expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNo
              | LPAREN expression:e RPAREN   {: RESULT = e; :}
              | OPER_MINUS expression:e      {: RESULT = ExpressionNode.flipSign(e);     :}
              | OBJECT:o                     {: RESULT = ExpressionNode.readObject(o);   :}
-             | VARIABLE:v                   {: RESULT = ExpressionNode.readVariable(v); :};
+             | VARIABLE:v                   {: RESULT = ExpressionNode.readVariable(v); :}
+             |                              {: RESULT = ExpressionNode.readEmpty();     :};
 
 
 condition ::= condition:c1 COND_AND condition:c2   {: RESULT = ConditionNode.cond_and(c1,c2); :}

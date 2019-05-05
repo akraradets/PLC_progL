@@ -70,6 +70,20 @@ public class Memory {
         throw new Error("Variable not found");
     }
 
+    public FunctionNode findFunction(String name) {
+        for (int i = stack.size() - 1; i >= 0; i--) {
+            Environment t = stack.get(i);
+            try {
+                return t.get_func(name);
+            } catch (Error e) {
+                logger.debug("name: " + name + " not found in here.");
+            }
+
+        }
+        logger.error("Variable name:<" + name + "> is not exist.");
+        throw new Error("Variable not found");
+    }
+    
     public void dumpMemory() {
         String mem = "Stack: \n";
         for (int i = 0; i < stack.size(); i++) {

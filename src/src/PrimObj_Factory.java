@@ -35,6 +35,9 @@ public class PrimObj_Factory {
         else if(type.equals("string")){
             return new StrPrim();
         }
+        else if(type.equals("null")){
+            return new NullPrim();
+        }
         else{
             logger.error("primitiveType <" + type + "> is not support!!");
             logger.error("Support primitiveType are " + type.toString());
