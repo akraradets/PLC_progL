@@ -24,13 +24,6 @@ public class StatementNode extends GenericNode {
     private ConditionNode argv;
 
     // From Decalre
-    private StatementNode(String command, String type, String name, ExpressionNode e) {
-        this.command = command;
-        this.value = name;
-        this.e = e;
-        this.type = type;
-    }
-
     private StatementNode(String command, String type, String name) {
         this.command = command;
         this.value = name;
@@ -42,9 +35,10 @@ public class StatementNode extends GenericNode {
         return d;
     }
 
-    public static StatementNode declare(String type, String name, ExpressionNode e) {
-        StatementNode d = new StatementNode("declare", type, name, e);
-        e.addChild(d);
+    public static StatementNode declare(String type, String name, ConditionNode c) {
+        StatementNode d = new StatementNode("declare", type, name);
+        d.argv = c;
+        c.addChild(d);
         return d;
     }
 
@@ -93,7 +87,7 @@ public class StatementNode extends GenericNode {
             // from declare
             case "declare":
                 PrimObj p = PrimObj_Factory.get(this.type);
-                p.setData(e.value);
+                p.setData(argv.value);
                 table.put(this.value, p);
                 logger.debug("command:" + this.command + " name:"+this.value+" value:" + p.toString());
                 break;

@@ -76,7 +76,7 @@ public class ConditionNode extends GenericNode {
                 logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "flipArgument":
-                this.value = flipArgument(this.e1.value);
+                this.value = flipArgument(this.c1.value);
                 logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "evalExpression":
@@ -108,9 +108,8 @@ public class ConditionNode extends GenericNode {
     
     private PrimObj flipArgument (PrimObj o) {
         if (o instanceof BoolPrim) {
-            BoolPrim neg_data = (BoolPrim) o;
-            neg_data.setNeg();
-            return neg_data;
+            Boolean b = (Boolean) o.getData();
+            return PrimObj_Factory.get(!b);
         }
         logger.error("Only [BoolPrim] is support for neg_argument");
         throw new Error("Only [BoolPrim] is support for neg_argument");

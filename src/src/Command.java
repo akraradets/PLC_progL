@@ -57,7 +57,6 @@ public class Command {
         if (o instanceof BoolPrim) {
             //Boolean data_o = (Boolean)o.getData();
             BoolPrim neg_data = (BoolPrim) o;
-            neg_data.setNeg();
             return neg_data;
         }
         logger.error("Only [BoolPrim] is support for neg_argument");

@@ -56,7 +56,7 @@ statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoo
           | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:};
 
 declare ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
-          | PRIMITIVE:p VARIABLE:v ASSIGNER expression:e  {: RESULT = StatementNode.declare(p,v,e); :};
+          | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a  {: RESULT = StatementNode.declare(p,v,a); :};
 
 expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2);    :}
              | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2);  :}
