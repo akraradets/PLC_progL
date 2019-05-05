@@ -188,6 +188,7 @@ public class StatementNode extends GenericNode {
                 break;
             case "functionReturn":
                 this.argv.getRoot().run();
+                System.out.println("Going to UPDATE returnnn");
                 table.update(this.value, this.argv.value);
                 logger.debug("command:" + this.command + " name:" + this.value + " value:" + this.argv.toString());
                 break;

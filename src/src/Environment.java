@@ -69,6 +69,7 @@ public class Environment {
     }
     
     public void update(String name, Object data) {
+        System.out.println("UPDATEEEEEEEEEEEEEEEEE" + data.toString());
         Memory m = Memory.getInstance();
         PrimObj p = m.findObject(name);
         p.setData(data);
