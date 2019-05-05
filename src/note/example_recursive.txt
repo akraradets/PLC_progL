@@ -1,0 +1,9 @@
+int x = 3;
+function f(int x){
+    x = x - 1;
+    if(x > 0){
+        f(x);
+    };
+    print(x);
+};
+f(x);
