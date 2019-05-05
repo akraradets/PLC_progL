@@ -55,8 +55,7 @@ public class ConditionNode extends GenericNode {
         c.e1 = e;
         e.addChild(c);
         return c;
-    }
-    
+    }    
     
     public static ConditionNode cond_and(ConditionNode c1,ConditionNode c2){
         c1.addChild(c2.getRoot());
@@ -67,6 +66,15 @@ public class ConditionNode extends GenericNode {
         return c;
     }
     
+    public static ConditionNode cond_or(ConditionNode c1,ConditionNode c2){
+//        System.out.println("This is cond_or f");
+        c1.addChild(c2.getRoot());
+        ConditionNode c = new ConditionNode("cond_or");
+        c2.addChild(c);
+        c.c1 = c1;
+        c.c2 = c2;
+        return c;
+    }
     
     public Object run() {
         switch (command) {
@@ -83,6 +91,13 @@ public class ConditionNode extends GenericNode {
                 break;
             case "cond_and":
                 this.value = cond_and(this.c1.value,this.c2.value);
+                logger.debug("command:"+this.command+" value:"+this.value);
+                break;
+            case "cond_or":
+//                System.out.println("This is cond_or");
+                this.value = cond_or(this.c1.value,this.c2.value);
+//                System.out.println("This is c1"+this.c1.value);
+//                System.out.println("This is c2"+this.c2.value);
                 logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "evalExpression":
@@ -133,6 +148,22 @@ public class ConditionNode extends GenericNode {
         }
         logger.error("Only [BoolPrim] is support for cond_and "+o1.getClass());
         throw new Error("Only [BoolPrim] is support for cond_and");
+    }
+    
+    public PrimObj cond_or (PrimObj o1, PrimObj o2) {
+        // only BoolPrim is support
+        if (o1 instanceof BoolPrim) {
+            if (o2 instanceof BoolPrim) {
+                if ( (Boolean) o1.getData() || (Boolean) o2.getData() ) {
+                    return PrimObj_Factory.get(true);
+                }
+                return PrimObj_Factory.get(false);
+            }
+            logger.error("Only [BoolPrim] is support for cond_or(o2 is not BoolPrim)");
+            throw new Error("Only [BoolPrim] is support for cond_or(o2 is not BoolPrim)");
+        }
+        logger.error("Only [BoolPrim] is support for cond_or");
+        throw new Error("Only [BoolPrim] is support for cond_or");
     }
 
 }
