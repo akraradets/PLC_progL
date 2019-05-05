@@ -83,6 +83,7 @@ condition ::= condition:c1 COND_AND condition:c2   {: RESULT = ConditionNode.con
             | condition:c1 COMP_LESSTHAN condition:c2 {: RESULT = ConditionNode.comp_lessthan(c1,c2); :}
             | condition:c1 COMP_MORETHAN condition:c2 {: RESULT = ConditionNode.comp_morethan(c1,c2); :}
             | condition:c1 COMP_MOREorEQUAL condition:c2 {: RESULT = ConditionNode.comp_moreORequal(c1,c2); :}
+            | condition:c1 COMP_LESSorEQUAL condition:c2 {: RESULT = ConditionNode.comp_lessORequal(c1,c2); :}
             | argument:a                           {: RESULT = a; :};
 
 argument ::= ARGRU_NEG argument:a   {: RESULT = ConditionNode.flipArgument(a);   :}         

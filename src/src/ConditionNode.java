@@ -111,6 +111,15 @@ public class ConditionNode extends GenericNode {
         return c;
     }
     
+    public static ConditionNode comp_lessORequal (ConditionNode c1,ConditionNode c2){
+        c1.addChild(c2.getRoot());
+        ConditionNode c = new ConditionNode("comp_lessORequal");
+        c2.addChild(c);
+        c.c1 = c1;
+        c.c2 = c2;
+        return c;
+    }
+    
     public Object run() {
         switch (command) {
             case "readObject":
@@ -146,6 +155,10 @@ public class ConditionNode extends GenericNode {
                 break;
             case "comp_moreORequal":
                 this.value = comp_moreORequal(this.c1.value,this.c2.value);
+                logger.debug("command:"+this.command+" value:"+this.value);
+                break;
+            case "comp_lessORequal":
+                this.value = comp_lessORequal(this.c1.value,this.c2.value);
                 logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "evalExpression":
@@ -260,6 +273,18 @@ public class ConditionNode extends GenericNode {
         }
         logger.error("Only [IntPrim,IntPrim] is support for comp_moreORequal");
         throw new Error("Only [IntPrim,IntPrim] is support for comp_moreORequal");
+    }
+    
+    public PrimObj comp_lessORequal(PrimObj o1, PrimObj o2){
+        // only IntPrim is support
+        if (o1 instanceof IntPrim && o2 instanceof IntPrim) {
+            if ( (Integer) o1.getData() <= (Integer) o2.getData() ) {
+                return PrimObj_Factory.get(true);
+            }
+            return PrimObj_Factory.get(false);
+        }
+        logger.error("Only [IntPrim,IntPrim] is support for comp_lessORequal");
+        throw new Error("Only [IntPrim,IntPrim] is support for comp_lessORequal");
     }
 
 }
