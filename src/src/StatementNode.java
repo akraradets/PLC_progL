@@ -22,6 +22,8 @@ public class StatementNode extends GenericNode {
     private StatementNode s;
     private String libname;
     private ConditionNode argv;
+    private StatementNode funcBody;
+    private StatementNode funcParam;
 
     // From Decalre
     private StatementNode(String command, String type, String name) {
@@ -42,6 +44,16 @@ public class StatementNode extends GenericNode {
         return d;
     }
 
+    public static StatementNode declare_func(String funcName, StatementNode declareParam, StatementNode body) {
+        StatementNode func = new StatementNode("declare_func");
+        // When we call function
+        // 
+        func.value = funcName;
+        func.funcBody = body;
+        func.funcParam = declareParam;
+        return func;
+    }
+    
     public static StatementNode assign(String name, ConditionNode c) {
         StatementNode d = new StatementNode("assign");
         d.value = name;
@@ -97,6 +109,12 @@ public class StatementNode extends GenericNode {
         return library;
     }
 
+    public static StatementNode functionCall(String funcName, ConditionNode a){
+        StatementNode func = new StatementNode("functionCall");
+        func.value = funcName;
+        return func;
+    }
+    
     public Object run() {
         Environment table = m.getEnvironment();
         System.out.println("RUNNNNNNNNNNN command:" + this.command);
@@ -107,6 +125,10 @@ public class StatementNode extends GenericNode {
                 p.setData(argv.value);
                 table.put(this.value, p);
                 logger.debug("command:" + this.command + " name:" + this.value + " value:" + p.toString());
+                break;
+            case "declare_func":
+                table.put_func(this.value, FunctionNode.declare(this.value,this.funcBody));
+                logger.debug("command:" + this.command + " name:" + this.value);
                 break;
             case "allocate":
                 table.put(this.value, PrimObj_Factory.get(this.type));
@@ -145,14 +167,16 @@ public class StatementNode extends GenericNode {
                 }
                 break;
             case "library":
-                logger.debug("command:" + this.command + " Libname:" + this.libname);
-
+                logger.debug("command:" + this.command + " LibName:" + this.libname);
                 if (this.libname.equals("print")) {
                     logger.debug(this.argv.toString());
                     UI.output = UI.output + this.argv.value.getData() + "\n";
                 }
                 break;
-
+            case "functionCall":
+                logger.debug("command:" + this.command + " FuncName:" + this.value);
+                functionCall(this.value);
+                break;
             default:
                 logger.error("command:" + this.command + " is not match");
                 break;
@@ -181,5 +205,11 @@ public class StatementNode extends GenericNode {
         }
         logger.error("ConditionNode did not load with BoolPrim " + c.value.getClass());
         throw new Error("ConditionNode did not load with BoolPrim");
+    }
+    
+    private void functionCall(String funcName){
+        FunctionNode f = m.findFunction(funcName);
+        f.run();
+        
     }
 }

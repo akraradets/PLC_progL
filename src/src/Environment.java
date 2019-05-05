@@ -18,6 +18,7 @@ public class Environment {
     public String tableName;
     private Logger logger;
     private Hashtable<String, PrimObj> table;
+    private Hashtable<String, FunctionNode> table_function;
     private Integer level;
 
     public Environment(Integer level) {
@@ -25,6 +26,7 @@ public class Environment {
         tableName = "Table_" + level.toString();
         logger = new Logger(tableName);
         table = new Hashtable<String, PrimObj>();
+        table_function = new Hashtable<String, FunctionNode>();
         logger.debug("New table:" + tableName);
     }
 
@@ -40,6 +42,14 @@ public class Environment {
         }
         table.put(name, p);
     }
+    
+    public void put_func(String name, FunctionNode func){
+        if (table_function.containsKey(name)){      
+            logger.error("Function name <" + name + "> is already declared!!");
+            throw new Error("Duplicate Function Name");
+        }
+        table_function.put(name, func);
+    }
 
     public PrimObj get(String name) {
         if (table.containsKey(name) == false) {
@@ -49,6 +59,14 @@ public class Environment {
         return table.get(name);
     }
 
+    public FunctionNode get_func(String name) {
+        if (table_function.containsKey(name) == false) {
+            logger.error("Function name <" + name + "> is not exist!!");
+            throw new Error("Function not found");
+        }
+        return table_function.get(name);
+    }
+    
     public void update(String name, Object data) {
         PrimObj p = get(name);
         p.setData(data);
@@ -57,7 +75,7 @@ public class Environment {
 
     @Override
     public String toString() {
-        return table.toString();
+        return table.toString() + "\n" + table_function.toString();
     }
     
 //    public static void main(String[] args) {
