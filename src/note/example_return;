@@ -1,0 +1,6 @@
+int x;
+function f(){
+    return 1+1;
+};
+x = f();
+print(x);

@@ -25,7 +25,6 @@ public class NullPrim extends PrimObj {
 
     @Override
     public void setData(Object o) {
-
     }
 
 }

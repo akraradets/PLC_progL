@@ -9,28 +9,31 @@ package src;
  *
  * @author akrarads
  */
-public class FunctionNode extends GenericNode{
+public class FunctionNode extends GenericNode {
+
     private Memory m = Memory.getInstance();
     private StatementNode stm;
     private StatementNode param;
     public ConditionNode argv;
     private String name;
-    
-    public FunctionNode(String name){
+    public PrimObj output;
+
+    public FunctionNode(String name) {
         this.name = name;
     }
-    
-    public static FunctionNode declare(String name,StatementNode stm, StatementNode param){
+
+    public static FunctionNode declare(String name, StatementNode stm, StatementNode param) {
         FunctionNode func = new FunctionNode(null);
         func.stm = stm;
         func.param = param;
         return func;
     }
-    
-    public Object run(){
+
+    public Object run() {
         m.newEnvironment();
         // delcare parameters
         param.getRoot().run();
+        // If argument is not null
         if (argv.value instanceof NullPrim == false) {
             StatementNode assign = StatementNode.assign(param.value, argv);
             assign.argv = argv;
@@ -42,12 +45,14 @@ public class FunctionNode extends GenericNode{
         stm.getRoot().run();
         m.dumpMemory();
         System.out.println("-------------------- Destroy Environment ----------------------");
+        this.output = m.findObject("return");
         m.destroyEnvironment();
+//        System.out.println("My OUTPUTTTTTTTTTTTTTTTTTT  " + this.output.toString());
         return null;
     }
-    
-    public String toString(){
-        String a = "Function:"+name+" param:"+param.type+"->"+param.value+" body:"+stm.toString();
+
+    public String toString() {
+        String a = "Function:" + name + " param:" + param.type + "->" + param.value + " body:" + stm.toString();
         return a;
     }
 }

@@ -26,6 +26,7 @@ public class Environment {
         tableName = "Table_" + level.toString();
         logger = new Logger(tableName);
         table = new Hashtable<String, PrimObj>();
+        table.put("return", PrimObj_Factory.get("null"));
         table_function = new Hashtable<String, FunctionNode>();
         logger.debug("New table:" + tableName);
     }
@@ -70,7 +71,12 @@ public class Environment {
     public void update(String name, Object data) {
         Memory m = Memory.getInstance();
         PrimObj p = m.findObject(name);
-        p.setData(data);
+        if(p instanceof NullPrim){
+            p = PrimObj_Factory.get((PrimObj)data);
+        }
+        else{
+            p.setData(data);
+        }
         table.put(name, p);
     }
 
