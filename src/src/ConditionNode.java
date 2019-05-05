@@ -46,7 +46,7 @@ public class ConditionNode extends GenericNode {
         ConditionNode c = new ConditionNode("flipArgument");
         c.c1 = c_pre;
         c_pre.addChild(c);
-        c.debug();
+//        c.debug();
         return c;
     }
     
@@ -81,6 +81,10 @@ public class ConditionNode extends GenericNode {
                 this.value = flipArgument(this.c1.value);
                 logger.debug("command:"+this.command+" value:"+this.value);
                 break;
+            case "cond_and":
+                this.value = cond_and(this.c1.value,this.c2.value);
+                logger.debug("command:"+this.command+" value:"+this.value);
+                break;
             case "evalExpression":
                 this.value = this.e1.value;
                 logger.debug("command:"+this.command+" value:"+this.value);
@@ -103,7 +107,6 @@ public class ConditionNode extends GenericNode {
         } else {
             a = this.command + ":" + this.value;
         }
-
         return a;
     }
     
@@ -114,6 +117,22 @@ public class ConditionNode extends GenericNode {
         }
         logger.error("Only [BoolPrim] is support for neg_argument");
         throw new Error("Only [BoolPrim] is support for neg_argument");
+    }
+    
+    public PrimObj cond_and (PrimObj o1, PrimObj o2) {
+        // only BoolPrim is support
+        if (o1 instanceof BoolPrim) {
+            if (o2 instanceof BoolPrim) {
+                if ( (Boolean) o1.getData() && (Boolean) o2.getData() ) {
+                    return PrimObj_Factory.get(true);
+                }
+                return PrimObj_Factory.get(false);
+            }
+            logger.error("Only [BoolPrim] is support for cond_and(o2 is not BoolPrim)");
+            throw new Error("Only [BoolPrim] is support for cond_and(o2 is not BoolPrim)");
+        }
+        logger.error("Only [BoolPrim] is support for cond_and "+o1.getClass());
+        throw new Error("Only [BoolPrim] is support for cond_and");
     }
 
 }

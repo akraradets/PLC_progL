@@ -137,7 +137,8 @@ public class StatementNode extends GenericNode {
     }
 
     private Boolean ifthen(ConditionNode c) {
-        c.run();
+        c.debug();
+        c.getRoot().run();
         if (c.value instanceof BoolPrim) {
             return (Boolean) c.value.getData();
         }
