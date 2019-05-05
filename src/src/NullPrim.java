@@ -12,7 +12,7 @@ package src;
 public class NullPrim extends PrimObj {
 
     private String type = "null";
-    private Object data = new Object();
+    private Object data = null;
 
     public NullPrim() {
 

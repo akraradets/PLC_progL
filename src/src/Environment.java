@@ -68,14 +68,15 @@ public class Environment {
     }
     
     public void update(String name, Object data) {
-        PrimObj p = get(name);
+        Memory m = Memory.getInstance();
+        PrimObj p = m.findObject(name);
         p.setData(data);
         table.put(name, p);
     }
 
     @Override
     public String toString() {
-        return table.toString() + "\n" + table_function.toString();
+        return table.toString() + "\n    " + table_function.toString();
     }
     
 //    public static void main(String[] args) {

@@ -15,9 +15,10 @@ public class StatementNode extends GenericNode {
 
     private Memory m = Memory.getInstance();
     private Logger logger = new Logger("StatementNode");
-    private String value;
+    public String value;
+    public String type;
+    
     private ExpressionNode e;
-    private String type;
     private ConditionNode c;
     private StatementNode s;
     private String libname;
@@ -110,6 +111,7 @@ public class StatementNode extends GenericNode {
     public static StatementNode functionCall(String funcName, ConditionNode a){
         StatementNode func = new StatementNode("functionCall");
         func.value = funcName;
+        func.argv = a;
         return func;
     }
     
@@ -125,7 +127,8 @@ public class StatementNode extends GenericNode {
                 logger.debug("command:" + this.command + " name:" + this.value + " value:" + p.toString());
                 break;
             case "declare_func":
-                table.put_func(this.value, FunctionNode.declare(this.value,this.funcBody));
+                FunctionNode func = FunctionNode.declare(this.value,this.funcBody,this.funcParam);
+                table.put_func(this.value, func);
                 logger.debug("command:" + this.command + " name:" + this.value);
                 break;
             case "allocate":
@@ -172,8 +175,9 @@ public class StatementNode extends GenericNode {
                 }
                 break;
             case "functionCall":
-                logger.debug("command:" + this.command + " FuncName:" + this.value);
-                functionCall(this.value);
+                this.argv.getRoot().run();
+                logger.debug("command:" + this.command + " FuncName:" + this.value + " Argv:"+this.argv.value.toString());
+                invoke(this.value,this.argv);
                 break;
             default:
                 logger.error("command:" + this.command + " is not match");
@@ -206,9 +210,9 @@ public class StatementNode extends GenericNode {
         throw new Error("ConditionNode did not load with BoolPrim");
     }
     
-    private void functionCall(String funcName){
+    private void invoke(String funcName, ConditionNode argv){
         FunctionNode f = m.findFunction(funcName);
+        f.argv = argv;
         f.run();
-        
     }
 }
