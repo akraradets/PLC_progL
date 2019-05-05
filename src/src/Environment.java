@@ -69,10 +69,14 @@ public class Environment {
     }
     
     public void update(String name, Object data) {
-        System.out.println("UPDATEEEEEEEEEEEEEEEEE" + data.toString());
         Memory m = Memory.getInstance();
         PrimObj p = m.findObject(name);
-        p.setData(data);
+        if(p instanceof NullPrim){
+            p = PrimObj_Factory.get((PrimObj)data);
+        }
+        else{
+            p.setData(data);
+        }
         table.put(name, p);
     }
 

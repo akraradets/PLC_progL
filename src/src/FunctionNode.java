@@ -16,7 +16,7 @@ public class FunctionNode extends GenericNode {
     private StatementNode param;
     public ConditionNode argv;
     private String name;
-//    public PrimObj output = PrimObj_Factory.get("null");
+    public PrimObj output;
 
     public FunctionNode(String name) {
         this.name = name;
@@ -45,7 +45,9 @@ public class FunctionNode extends GenericNode {
         stm.getRoot().run();
         m.dumpMemory();
         System.out.println("-------------------- Destroy Environment ----------------------");
+        this.output = m.findObject("return");
         m.destroyEnvironment();
+//        System.out.println("My OUTPUTTTTTTTTTTTTTTTTTT  " + this.output.toString());
         return null;
     }
 
