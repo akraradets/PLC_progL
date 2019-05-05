@@ -48,7 +48,7 @@ public class IntPrim extends PrimObj {
             return i;
         } catch (Exception e) {
             logger.error("Wrong Type where expected <Integer> --> " + "The given Type is <" + o.getClass() +">");
-            throw new Error("Wrong Type");
+            throw new Error("Wrong Type where expected <Integer> --> " + "The given Type is <" + o.getClass() +">");
         }
     }
 }

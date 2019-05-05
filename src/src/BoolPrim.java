@@ -46,7 +46,7 @@ public class BoolPrim extends PrimObj {
             return i;
         } catch (Exception e) {
             logger.error("Wrong Type where expected <Boolean> --> " + "The given Type is <" + o.getClass() +">");
-            throw new Error("Wrong Type");
+            throw new Error("Wrong Type where expected <Boolean> --> " + "The given Type is <" + o.getClass() +">");
         }
     }
 }

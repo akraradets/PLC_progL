@@ -241,7 +241,7 @@ public class StatementNode extends GenericNode {
             return (Boolean) c.value.getData();
         }
         logger.error("ConditionNode did not load with BoolPrim " + c.value.getClass());
-        throw new Error("ConditionNode did not load with BoolPrim");
+        throw new Error("ConditionNode did not load with BoolPrim " + c.value.getClass());
     }
     
     private PrimObj invoke(String funcName, ConditionNode argv){

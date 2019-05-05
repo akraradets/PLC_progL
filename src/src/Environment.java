@@ -39,7 +39,7 @@ public class Environment {
         // Check if name is already declare
         if (table.containsKey(name)) {
             logger.error("Variable name <" + name + "> is already declared!!");
-            throw new Error("Duplicate Variable Name");
+            throw new Error("Variable name <" + name + "> is already declared!!");
         }
         table.put(name, p);
     }
@@ -47,7 +47,7 @@ public class Environment {
     public void put_func(String name, FunctionNode func){
         if (table_function.containsKey(name)){      
             logger.error("Function name <" + name + "> is already declared!!");
-            throw new Error("Duplicate Function Name");
+            throw new Error("Function name <" + name + "> is already declared!!");
         }
         table_function.put(name, func);
     }
@@ -55,7 +55,7 @@ public class Environment {
     public PrimObj get(String name) {
         if (table.containsKey(name) == false) {
             logger.error("Variable name <" + name + "> is not exist!!");
-            throw new Error("Variable not found");
+            throw new Error("Variable name <" + name + "> is not exist!!");
         }
         return table.get(name);
     }
@@ -63,7 +63,7 @@ public class Environment {
     public FunctionNode get_func(String name) {
         if (table_function.containsKey(name) == false) {
             logger.error("Function name <" + name + "> is not exist!!");
-            throw new Error("Function not found");
+            throw new Error("Function name <" + name + "> is not exist!!");
         }
         return table_function.get(name);
     }

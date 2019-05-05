@@ -19,6 +19,7 @@ public class UI extends javax.swing.JFrame {
      * Creates new form UI
      */
     public static String output = "";
+
     public UI() {
         initComponents();
     }
@@ -115,16 +116,23 @@ public class UI extends javax.swing.JFrame {
         UI.output = "";
         try {
             this.run();
-        } catch (Exception ex) {
+        } catch (Error e){
+            System.err.println(e.getMessage());
+            output = e.getMessage();
+            Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, e);
+        } 
+        catch (Exception ex) {
+            System.err.println(ex.getMessage());
+            output = ex.getMessage();
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        printOutput();
         // debug
         m.dumpMemory();
         System.out.println("---------------------- DONE ------------------\n");
     }//GEN-LAST:event_buttonRunActionPerformed
 
-    private void run() throws Exception{
+    private void run() throws Exception {
         System.out.println("---------------------- RUN ------------------");
         // Check if infix
         String inputString = inputText.getText();
@@ -136,13 +144,14 @@ public class UI extends javax.swing.JFrame {
             System.err.println(ex);
             throw ex;
         }
-        printOutput();
+
     }
-    
-    public void printOutput(){
+
+    public void printOutput() {
         outputText.setText(output);
-        
+
     }
+
     /**
      * @param args the command line arguments
      */

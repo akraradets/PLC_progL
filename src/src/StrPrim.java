@@ -53,7 +53,7 @@ public class StrPrim extends PrimObj{
             return i;
         } catch (Exception e) {
             logger.error("Wrong Type where expected <String> --> " + "The given Type is <" + o.getClass() +">");
-            throw new Error("Wrong Type");
+            throw new Error("Wrong Type where expected <String> --> " + "The given Type is <" + o.getClass() +">");
         }
     }
     

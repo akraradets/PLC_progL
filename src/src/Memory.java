@@ -67,7 +67,7 @@ public class Memory {
 
         }
         logger.error("Variable name:<" + name + "> is not exist.");
-        throw new Error("Variable not found");
+        throw new Error("Variable name:<" + name + "> is not exist.");
     }
 
     public FunctionNode findFunction(String name) {
@@ -81,7 +81,7 @@ public class Memory {
 
         }
         logger.error("Variable name:<" + name + "> is not exist.");
-        throw new Error("Variable not found");
+        throw new Error("Variable name:<" + name + "> is not exist.");
     }
     
     public void dumpMemory() {

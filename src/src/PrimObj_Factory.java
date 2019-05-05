@@ -39,9 +39,8 @@ public class PrimObj_Factory {
             return new NullPrim();
         }
         else{
-            logger.error("primitiveType <" + type + "> is not support!!");
-            logger.error("Support primitiveType are " + type.toString());
-            throw new Error("Not support primitiveType");
+            logger.error("primitiveType <" + type + "> is not support!!. \nSupport primitiveType are " + type.toString());
+            throw new Error("primitiveType <" + type + "> is not support!!.\nSupport primitiveType are " + type.toString());
         }
     }
     
@@ -61,7 +60,7 @@ public class PrimObj_Factory {
         }
         else{
             logger.error("Unsupport Object of type <"+o.getClass()+">");
-            throw new Error("Unsupport Object");
+            throw new Error("Unsupport Object of type <"+o.getClass()+">");
         }
     }
 //    public static void main(String[] args) {
