@@ -66,12 +66,18 @@ public class StatementNode extends GenericNode {
     public static StatementNode ifthen(ConditionNode c, StatementNode s) {
         StatementNode ifthen = new StatementNode("ifthen");
         ifthen.c = c;
-        c.debug();
-        s.debug();
         ifthen.addChild("true", s.getRoot());
         return ifthen;
     }
 
+    public static StatementNode ifthenelse(ConditionNode c, StatementNode s1, StatementNode s2) {
+        StatementNode ifthen = new StatementNode("ifthenelse");
+        ifthen.c = c;
+        ifthen.addChild("true", s1.getRoot());
+        ifthen.addChild("false", s2.getRoot());
+        return ifthen;
+    }
+    
     public static StatementNode library(String libname, ConditionNode c) {
         StatementNode library = new StatementNode("library");
         library.libname = libname;
@@ -104,6 +110,17 @@ public class StatementNode extends GenericNode {
                 if (ifthen(this.c)) {
                     logger.debug("command:" + this.command + ":: true");
                     children.get("true").run();
+                }
+                break;
+            case "ifthenelse":
+                logger.debug("command:" + this.command);
+                if (ifthen(this.c)) {
+                    logger.debug("command:" + this.command + ":: true");
+                    children.get("true").run();
+                }
+                else{
+                    logger.debug("command:" + this.command + ":: false");
+                    children.get("false").run();
                 }
                 break;
             case "library":

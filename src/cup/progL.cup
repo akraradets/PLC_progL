@@ -52,6 +52,10 @@ initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.deb
 statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
           | declare:d                                   {: RESULT = d;   :}
           | IF LPAREN condition:c RPAREN LBRANCE statement:s SEPARATOR RBRANCE {: RESULT = StatementNode.ifthen(c,s); :}
+          | IF LPAREN condition:c RPAREN 
+            LBRANCE statement:s1 SEPARATOR RBRANCE 
+            ELSE LBRANCE statement:s2 SEPARATOR RBRANCE 
+            {: RESULT = StatementNode.ifthenelse(c,s1,s2); :}
           | VARIABLE:v ASSIGNER expression:e            {: RESULT = StatementNode.assign(v,e); :}
           | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:};
 
