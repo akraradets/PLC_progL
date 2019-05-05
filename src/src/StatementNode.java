@@ -115,6 +115,13 @@ public class StatementNode extends GenericNode {
         return func;
     }
     
+    public static StatementNode functionReturn(ConditionNode a){
+        StatementNode ret = new StatementNode("functionReturn");
+        ret.value = "return";
+        ret.argv = a;
+        return ret;
+    }
+    
     public Object run() {
         Environment table = m.getEnvironment();
         System.out.println("RUNNNNNNNNNNN command:" + this.command);
@@ -178,6 +185,11 @@ public class StatementNode extends GenericNode {
                 this.argv.getRoot().run();
                 logger.debug("command:" + this.command + " FuncName:" + this.value + " Argv:"+this.argv.value.toString());
                 invoke(this.value,this.argv);
+                break;
+            case "functionReturn":
+                this.argv.getRoot().run();
+                table.update(this.value, this.argv.value);
+                logger.debug("command:" + this.command + " name:" + this.value + " value:" + this.argv.toString());
                 break;
             default:
                 logger.error("command:" + this.command + " is not match");

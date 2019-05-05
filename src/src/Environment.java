@@ -26,6 +26,7 @@ public class Environment {
         tableName = "Table_" + level.toString();
         logger = new Logger(tableName);
         table = new Hashtable<String, PrimObj>();
+        table.put("return", PrimObj_Factory.get("null"));
         table_function = new Hashtable<String, FunctionNode>();
         logger.debug("New table:" + tableName);
     }

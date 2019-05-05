@@ -52,7 +52,7 @@ initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.deb
 statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
           | declare_var:d                               {: RESULT = d; :}
           | declare_func:d                              {: RESULT = d; :}
-
+          | RETURN argument:a                           {: RESULT = StatementNode.functionReturn(a); :}
           | IF LPAREN condition:c RPAREN 
             LBRANCE statement:s SEPARATOR RBRANCE       
                                                         {: RESULT = StatementNode.ifthen(c,s); :}

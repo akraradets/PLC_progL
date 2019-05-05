@@ -9,33 +9,38 @@ package src;
  *
  * @author akrarads
  */
-public class FunctionNode extends GenericNode{
+public class FunctionNode extends GenericNode {
+
     private Memory m = Memory.getInstance();
     private StatementNode stm;
     private StatementNode param;
     public ConditionNode argv;
     private String name;
-    
-    public FunctionNode(String name){
+//    public PrimObj output = PrimObj_Factory.get("null");
+
+    public FunctionNode(String name) {
         this.name = name;
     }
-    
-    public static FunctionNode declare(String name,StatementNode stm, StatementNode param){
+
+    public static FunctionNode declare(String name, StatementNode stm, StatementNode param) {
         FunctionNode func = new FunctionNode(null);
         func.stm = stm;
         func.param = param;
         return func;
     }
-    
-    public Object run(){
+
+    public Object run() {
         m.newEnvironment();
         // delcare parameters
         param.getRoot().run();
-        StatementNode assign = StatementNode.assign(param.value, argv);
-        assign.argv = argv;
-        System.out.println("BEFORE::::::::" + assign.toString());
-        assign.run();
-        System.out.println("AFTER::::::::" + assign.toString());
+        // If argument is not null
+        if (argv.value instanceof NullPrim == false) {
+            StatementNode assign = StatementNode.assign(param.value, argv);
+            assign.argv = argv;
+            System.out.println("BEFORE::::::::" + assign.toString());
+            assign.run();
+            System.out.println("AFTER::::::::" + assign.toString());
+        }
         System.out.println("-------------------- New Environment ----------------------");
         stm.getRoot().run();
         m.dumpMemory();
@@ -43,9 +48,9 @@ public class FunctionNode extends GenericNode{
         m.destroyEnvironment();
         return null;
     }
-    
-    public String toString(){
-        String a = "Function:"+name+" param:"+param.type+"->"+param.value+" body:"+stm.toString();
+
+    public String toString() {
+        String a = "Function:" + name + " param:" + param.type + "->" + param.value + " body:" + stm.toString();
         return a;
     }
 }
