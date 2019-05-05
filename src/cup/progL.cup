@@ -17,7 +17,7 @@ action code {:
 // Primitive set
 terminal String         PRIMITIVE, LIBRARY;
 // TOKEN set
-terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE;
+terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE, WHILE;
 // Operation set
 terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // Conditon set
@@ -51,12 +51,17 @@ initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.deb
 
 statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
           | declare:d                                   {: RESULT = d;   :}
-          | IF LPAREN condition:c RPAREN LBRANCE statement:s SEPARATOR RBRANCE {: RESULT = StatementNode.ifthen(c,s); :}
+          | IF LPAREN condition:c RPAREN 
+            LBRANCE statement:s SEPARATOR RBRANCE       
+                                                        {: RESULT = StatementNode.ifthen(c,s); :}
           | IF LPAREN condition:c RPAREN 
             LBRANCE statement:s1 SEPARATOR RBRANCE 
             ELSE LBRANCE statement:s2 SEPARATOR RBRANCE 
-            {: RESULT = StatementNode.ifthenelse(c,s1,s2); :}
-          | VARIABLE:v ASSIGNER expression:e            {: RESULT = StatementNode.assign(v,e); :}
+                                                        {: RESULT = StatementNode.ifthenelse(c,s1,s2); :}
+          | WHILE LPAREN condition:c RPAREN 
+            LBRANCE statement:s SEPARATOR RBRANCE 
+                                                        {: RESULT = StatementNode.whileloop(c,s); :}
+          | VARIABLE:v ASSIGNER argument:a              {: RESULT = StatementNode.assign(v,a); :}
           | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:};
 
 declare ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
