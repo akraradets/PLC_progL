@@ -18,7 +18,8 @@ public class StatementNode extends GenericNode {
     private String value;
     private ExpressionNode e;
     private String type;
-    
+    private ConditionNode c;
+    private StatementNode s;
     
     // From Decalre
     private StatementNode(String command, String type, String name, ExpressionNode e) {
@@ -66,6 +67,14 @@ public class StatementNode extends GenericNode {
         return new StatementNode("assign", name, e);
     }
 
+    public static StatementNode ifthen(ConditionNode c, StatementNode s){
+        StatementNode ifthen = new StatementNode("ifthen");
+        ifthen.c = c;
+        System.out.println(c.toString());
+        ifthen.addChild("true", s);
+        return ifthen;
+    }
+    
     public Object run() {
         Environment table = m.getEnvironment();
         switch (this.command) {
@@ -82,6 +91,14 @@ public class StatementNode extends GenericNode {
             case "empty":
                 logger.debug(this.command);
                 break;
+            case "ifthen":
+                logger.debug("command:"+this.command);
+                if(ifthen(this.c)){
+                    logger.debug("command:"+this.command + ":: true");
+                    children.get("true").run();
+                }
+                break;
+                
             default:
                 logger.error("command:"+this.command+" is not match");
                 break;
@@ -91,5 +108,14 @@ public class StatementNode extends GenericNode {
         }
         // return to parent
         return null;
+    }
+    
+    private Boolean ifthen(ConditionNode c){
+        c.run();
+        if(c.value instanceof BoolPrim){
+            return (Boolean) c.value.getData();
+        }
+        logger.error("ConditionNode did not load with BoolPrim " + c.value.getClass());
+        throw new Error("ConditionNode did not load with BoolPrim");
     }
 }
