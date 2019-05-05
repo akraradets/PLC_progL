@@ -67,7 +67,6 @@ public class ConditionNode extends GenericNode {
     }
     
     public static ConditionNode cond_or(ConditionNode c1,ConditionNode c2){
-//        System.out.println("This is cond_or f");
         c1.addChild(c2.getRoot());
         ConditionNode c = new ConditionNode("cond_or");
         c2.addChild(c);
@@ -77,7 +76,6 @@ public class ConditionNode extends GenericNode {
     }
     
     public static ConditionNode comp_equal(ConditionNode c1,ConditionNode c2){
-//        System.out.println("This is cond_or f");
         c1.addChild(c2.getRoot());
         ConditionNode c = new ConditionNode("comp_equal");
         c2.addChild(c);
@@ -87,9 +85,17 @@ public class ConditionNode extends GenericNode {
     }
     
     public static ConditionNode comp_lessthan (ConditionNode c1,ConditionNode c2){
-//        System.out.println("This is cond_or f");
         c1.addChild(c2.getRoot());
         ConditionNode c = new ConditionNode("comp_lessthan");
+        c2.addChild(c);
+        c.c1 = c1;
+        c.c2 = c2;
+        return c;
+    }
+    
+    public static ConditionNode comp_morethan (ConditionNode c1,ConditionNode c2){
+        c1.addChild(c2.getRoot());
+        ConditionNode c = new ConditionNode("comp_morethan");
         c2.addChild(c);
         c.c1 = c1;
         c.c2 = c2;
@@ -114,10 +120,7 @@ public class ConditionNode extends GenericNode {
                 logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "cond_or":
-//                System.out.println("This is cond_or");
                 this.value = cond_or(this.c1.value,this.c2.value);
-//                System.out.println("This is c1"+this.c1.value);
-//                System.out.println("This is c2"+this.c2.value);
                 logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "comp_equal":
@@ -126,6 +129,10 @@ public class ConditionNode extends GenericNode {
                 break;
             case "comp_lessthan":
                 this.value = comp_lessthan(this.c1.value,this.c2.value);
+                logger.debug("command:"+this.command+" value:"+this.value);
+                break;
+            case "comp_morethan":
+                this.value = comp_morethan(this.c1.value,this.c2.value);
                 logger.debug("command:"+this.command+" value:"+this.value);
                 break;
             case "evalExpression":
@@ -216,6 +223,18 @@ public class ConditionNode extends GenericNode {
         }
         logger.error("Only [IntPrim,IntPrim] is support for comp_lessthan");
         throw new Error("Only [IntPrim,IntPrim] is support for comp_lessthan");
+    }
+    
+    public PrimObj comp_morethan(PrimObj o1, PrimObj o2){
+        // only IntPrim is support
+        if (o1 instanceof IntPrim && o2 instanceof IntPrim) {
+            if ( (Integer) o1.getData() > (Integer) o2.getData() ) {
+                return PrimObj_Factory.get(true);
+            }
+            return PrimObj_Factory.get(false);
+        }
+        logger.error("Only [IntPrim,IntPrim] is support for comp_morethan");
+        throw new Error("Only [IntPrim,IntPrim] is support for comp_morethan");
     }
 
 }
