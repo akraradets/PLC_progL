@@ -73,10 +73,8 @@ public class StatementNode extends GenericNode {
         this.e = e;
     }
 
-    public static StatementNode empty(DeclareNode d) {
-        StatementNode s = new StatementNode("empty");
-        s.addChild(d.getRoot());
-        return s;
+    public static StatementNode empty() {
+        return  new StatementNode("empty");
     }
 
     public static StatementNode ifthen(ConditionNode c, StatementNode s) {
