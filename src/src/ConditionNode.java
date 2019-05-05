@@ -5,6 +5,7 @@
  */
 package src;
 
+import jflex.Main;
 import src.logger.Logger;
 
 /**
@@ -45,6 +46,7 @@ public class ConditionNode extends GenericNode {
         ConditionNode c = new ConditionNode("flipArgument");
         c.c1 = c_pre;
         c_pre.addChild(c);
+        c.debug();
         return c;
     }
     
@@ -102,7 +104,6 @@ public class ConditionNode extends GenericNode {
         return a;
     }
     
-    
     private PrimObj flipArgument (PrimObj o) {
         if (o instanceof BoolPrim) {
             BoolPrim neg_data = (BoolPrim) o;
@@ -112,4 +113,5 @@ public class ConditionNode extends GenericNode {
         logger.error("Only [BoolPrim] is support for neg_argument");
         throw new Error("Only [BoolPrim] is support for neg_argument");
     }
+
 }

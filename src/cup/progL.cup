@@ -71,4 +71,6 @@ condition ::= condition:c1 COND_AND condition:c2 {: RESULT = ConditionNode.cond_
           |   argument:a                         {: RESULT = a; :};
 
 argument ::= ARGRU_NEG argument:a   {: RESULT = ConditionNode.flipArgument(a);   :}
+            | OBJECT:o              {: RESULT = ConditionNode.readObject(o);   :}
+            | VARIABLE:v            {: RESULT = ConditionNode.readVariable(v); :};               
             | expression:e          {: RESULT = ConditionNode.evalExpression(e); :};
