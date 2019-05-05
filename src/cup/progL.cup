@@ -68,9 +68,10 @@ expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNo
              | VARIABLE:v                   {: RESULT = ExpressionNode.readVariable(v); :};
 
 
-condition ::= condition:c1 COND_AND condition:c2 {: RESULT = ConditionNode.cond_and(c1,c2); :}
-            | condition:c1 COND_OR condition:c2  {: RESULT = ConditionNode.cond_or(c1,c2);  :}
-            | argument:a                         {: RESULT = a; :};
+condition ::= condition:c1 COND_AND condition:c2   {: RESULT = ConditionNode.cond_and(c1,c2); :}
+            | condition:c1 COND_OR  condition:c2   {: RESULT = ConditionNode.cond_or(c1,c2);  :}
+            | condition:c1 COMP_EQUAL condition:c2 {: RESULT = ConditionNode.comp_equal(c1,c2);  :}
+            | argument:a                           {: RESULT = a; :};
 
 argument ::= ARGRU_NEG argument:a   {: RESULT = ConditionNode.flipArgument(a);   :}         
             | expression:e          {: RESULT = ConditionNode.evalExpression(e); :};
