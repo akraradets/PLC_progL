@@ -17,7 +17,7 @@ action code {:
 // Primitive set
 terminal String         PRIMITIVE, LIBRARY;
 // TOKEN set
-terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE;
+terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE, WHILE, FUNCTION;
 // Operation set
 terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // Conditon set
@@ -32,7 +32,7 @@ terminal String         VARIABLE;
 terminal Object         OBJECT;
 
 non terminal ExpressionNode expression;
-non terminal StatementNode  statement,declare;
+non terminal StatementNode  statement,declare_var,declare_func;
 non terminal ConditionNode  argument, condition;
 non terminal            initial;
 
@@ -50,13 +50,22 @@ start with initial;
 initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.debug(); s.getRoot().run(); :};
 
 statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
-          | declare:d                                   {: RESULT = d;   :}
-          | IF LPAREN condition:c RPAREN LBRANCE statement:s SEPARATOR RBRANCE {: RESULT = StatementNode.ifthen(c,s); :}
-          | VARIABLE:v ASSIGNER expression:e            {: RESULT = StatementNode.assign(v,e); :}
+          | declare_var:d                               {: RESULT = d; :}
+          | IF LPAREN condition:c RPAREN 
+            LBRANCE statement:s SEPARATOR RBRANCE       
+                                                        {: RESULT = StatementNode.ifthen(c,s); :}
+          | IF LPAREN condition:c RPAREN 
+            LBRANCE statement:s1 SEPARATOR RBRANCE 
+            ELSE LBRANCE statement:s2 SEPARATOR RBRANCE 
+                                                        {: RESULT = StatementNode.ifthenelse(c,s1,s2); :}
+          | WHILE LPAREN condition:c RPAREN 
+            LBRANCE statement:s SEPARATOR RBRANCE 
+                                                        {: RESULT = StatementNode.whileloop(c,s); :}
+          | VARIABLE:v ASSIGNER argument:a              {: RESULT = StatementNode.assign(v,a); :}
           | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:};
 
-declare ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
-          | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a  {: RESULT = StatementNode.declare(p,v,a); :};
+declare_var ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
+              | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a    {: RESULT = StatementNode.declare_var(p,v,a); :};
 
 expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2);    :}
              | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2);  :}

@@ -35,8 +35,16 @@ public class StatementNode extends GenericNode {
         return d;
     }
 
-    public static StatementNode declare(String type, String name, ConditionNode c) {
-        StatementNode d = new StatementNode("declare", type, name);
+    public static StatementNode declare_var(String type, String name, ConditionNode c) {
+        StatementNode d = new StatementNode("declare_var", type, name);
+        d.argv = c;
+        c.addChild(d);
+        return d;
+    }
+
+    public static StatementNode assign(String name, ConditionNode c) {
+        StatementNode d = new StatementNode("assign");
+        d.value = name;
         d.argv = c;
         c.addChild(d);
         return d;
@@ -59,15 +67,24 @@ public class StatementNode extends GenericNode {
         return s;
     }
 
-    public static StatementNode assign(String name, ExpressionNode e) {
-        return new StatementNode("assign", name, e);
-    }
-
     public static StatementNode ifthen(ConditionNode c, StatementNode s) {
         StatementNode ifthen = new StatementNode("ifthen");
         ifthen.c = c;
-        c.debug();
-        s.debug();
+        ifthen.addChild("true", s.getRoot());
+        return ifthen;
+    }
+
+    public static StatementNode ifthenelse(ConditionNode c, StatementNode s1, StatementNode s2) {
+        StatementNode ifthen = new StatementNode("ifthenelse");
+        ifthen.c = c;
+        ifthen.addChild("true", s1.getRoot());
+        ifthen.addChild("false", s2.getRoot());
+        return ifthen;
+    }
+
+    public static StatementNode whileloop(ConditionNode c, StatementNode s) {
+        StatementNode ifthen = new StatementNode("whileloop");
+        ifthen.c = c;
         ifthen.addChild("true", s.getRoot());
         return ifthen;
     }
@@ -82,26 +99,47 @@ public class StatementNode extends GenericNode {
 
     public Object run() {
         Environment table = m.getEnvironment();
-        System.out.println("RUNNNNNNNNNNN command:"+this.command);
+        System.out.println("RUNNNNNNNNNNN command:" + this.command);
         switch (this.command) {
             // from declare
-            case "declare":
+            case "declare_var":
                 PrimObj p = PrimObj_Factory.get(this.type);
                 p.setData(argv.value);
                 table.put(this.value, p);
-                logger.debug("command:" + this.command + " name:"+this.value+" value:" + p.toString());
+                logger.debug("command:" + this.command + " name:" + this.value + " value:" + p.toString());
                 break;
             case "allocate":
                 table.put(this.value, PrimObj_Factory.get(this.type));
-                logger.debug("command:" + this.command + " name:"+this.value);
+                logger.debug("command:" + this.command + " name:" + this.value);
                 break;
             // new
             case "empty":
                 logger.debug(this.command);
                 break;
+            case "assign":
+                table.update(this.value, this.argv.value);
+                logger.debug("command:" + this.command + " name:" + this.value + " value:" + this.argv.toString());
+                break;
             case "ifthen":
                 logger.debug("command:" + this.command);
-                if (ifthen(this.c)) {
+                if (eval(this.c)) {
+                    logger.debug("command:" + this.command + ":: true");
+                    children.get("true").run();
+                }
+                break;
+            case "ifthenelse":
+                logger.debug("command:" + this.command);
+                if (eval(this.c)) {
+                    logger.debug("command:" + this.command + ":: true");
+                    children.get("true").run();
+                } else {
+                    logger.debug("command:" + this.command + ":: false");
+                    children.get("false").run();
+                }
+                break;
+            case "whileloop":
+                logger.debug("command:" + this.command);
+                while (eval(this.c)) {
                     logger.debug("command:" + this.command + ":: true");
                     children.get("true").run();
                 }
@@ -128,7 +166,7 @@ public class StatementNode extends GenericNode {
 
     public String toString() {
         if (this.command.equals("ifthen")) {
-            String a = "ifthen [true]:"+this.children.get("true").toString()+"[default]";
+            String a = "ifthen [true]:" + this.children.get("true").toString() + "[default]";
             return a;
         } else {
             String a = this.command;
@@ -136,7 +174,7 @@ public class StatementNode extends GenericNode {
         }
     }
 
-    private Boolean ifthen(ConditionNode c) {
+    private Boolean eval(ConditionNode c) {
         c.debug();
         c.getRoot().run();
         if (c.value instanceof BoolPrim) {
