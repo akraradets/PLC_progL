@@ -35,8 +35,8 @@ public class StatementNode extends GenericNode {
         return d;
     }
 
-    public static StatementNode declare(String type, String name, ConditionNode c) {
-        StatementNode d = new StatementNode("declare", type, name);
+    public static StatementNode declare_var(String type, String name, ConditionNode c) {
+        StatementNode d = new StatementNode("declare_var", type, name);
         d.argv = c;
         c.addChild(d);
         return d;
@@ -102,7 +102,7 @@ public class StatementNode extends GenericNode {
         System.out.println("RUNNNNNNNNNNN command:" + this.command);
         switch (this.command) {
             // from declare
-            case "declare":
+            case "declare_var":
                 PrimObj p = PrimObj_Factory.get(this.type);
                 p.setData(argv.value);
                 table.put(this.value, p);
