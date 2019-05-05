@@ -50,6 +50,7 @@ public class UI extends javax.swing.JFrame {
         labelInput.setText("Input :");
 
         inputText.setColumns(20);
+        inputText.setFont(new java.awt.Font("Courier New", 0, 48)); // NOI18N
         inputText.setRows(5);
         jScrollPane2.setViewportView(inputText);
 
