@@ -35,7 +35,7 @@ public class IntPrim extends PrimObj {
     @Override
     public void setData(Object o) {
         data = cast(o);
-        logger.debug("set Data: " + data.toString());
+        logger.debug("set Data: ");
     }
     
     private Integer cast(Object o){

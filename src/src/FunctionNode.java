@@ -31,6 +31,11 @@ public class FunctionNode extends GenericNode{
         m.newEnvironment();
         // delcare parameters
         param.getRoot().run();
+        StatementNode assign = StatementNode.assign(param.value, argv);
+        assign.argv = argv;
+        System.out.println("BEFORE::::::::" + assign.toString());
+        assign.run();
+        System.out.println("AFTER::::::::" + assign.toString());
         System.out.println("-------------------- New Environment ----------------------");
         stm.getRoot().run();
         m.dumpMemory();

@@ -22,7 +22,7 @@ public class StatementNode extends GenericNode {
     private ConditionNode c;
     private StatementNode s;
     private String libname;
-    private ConditionNode argv;
+    public ConditionNode argv;
     private StatementNode funcBody;
     private StatementNode funcParam;
 
@@ -194,7 +194,10 @@ public class StatementNode extends GenericNode {
         if (this.command.equals("ifthen")) {
             String a = "ifthen [true]:" + this.children.get("true").toString() + "[default]";
             return a;
-        } else {
+        } else if(this.command.equals("assign")){
+            String a = this.command + " " + this.value + " " + this.argv.toString();
+            return a;
+        }{
             String a = this.command;
             return a;
         }
