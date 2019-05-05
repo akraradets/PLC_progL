@@ -84,27 +84,34 @@ public class ExpressionNode extends GenericNode {
     }
 
     public Object run() {
-        logger.debug(this.command + " " + this.value);
+        
         switch (command) {
             case "readObject":
+                logger.debug(this.command + " " + this.value);
                 break;
             case "readVariable":
+                logger.debug(this.command + " " + this.varname);
                 this.value = m.findObject(this.varname);
                 break;
             case "add":
                 this.value = add(this.e1.value, this.e2.value);
+                logger.debug(this.command + " " + this.value);
                 break;
             case "minus":
                 this.value = minus(this.e1.value, this.e2.value);
+                logger.debug(this.command + " " + this.value);
                 break;
             case "multi":
                 this.value = multi(this.e1.value, this.e2.value);
+                logger.debug(this.command + " " + this.value);
                 break;
             case "divide":
                 this.value = divide(this.e1.value, this.e2.value);
+                logger.debug(this.command + " " + this.value);
                 break;
             case "flipSign":
                 this.value = flipSign(this.e1.value);
+                logger.debug(this.command + " " + this.value);
                 // this.value = this.e1.value * -1;
                 break;
 

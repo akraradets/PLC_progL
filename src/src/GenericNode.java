@@ -39,7 +39,7 @@ public class GenericNode {
     
     public Object run() {
         // if not the last child
-        if(!children.isEmpty()){
+        if(children.containsKey("default")){
             children.get("default").run();            
         }
         // return to parent
@@ -49,7 +49,7 @@ public class GenericNode {
     public void debug(){
         GenericNode a = this.getRoot();
         System.out.print(a.toString() + "->");
-        while(a.children.isEmpty() == false){
+        while(a.children.containsKey("default")){
             a = a.children.get("default");
             System.out.print(a.toString() + "->");
         }

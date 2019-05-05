@@ -15,7 +15,7 @@ action code {:
 :};
 /* ------------Grammar symbol declarations----------- */
 // Primitive set
-terminal String         PRIMITIVE;
+terminal String         PRIMITIVE, LIBRARY;
 // TOKEN set
 terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE;
 // Operation set
@@ -51,11 +51,12 @@ initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.deb
 
 statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
           | declare:d                                   {: RESULT = d;   :}
-          | IF LPAREN condition:c RPAREN statement:s    {: RESULT = StatementNode.ifthen(c,s); :}
-          | VARIABLE:v ASSIGNER expression:e            {: RESULT = StatementNode.assign(v,e); :};
+          | IF LPAREN condition:c RPAREN LBRANCE statement:s SEPARATOR RBRANCE {: RESULT = StatementNode.ifthen(c,s); :}
+          | VARIABLE:v ASSIGNER expression:e            {: RESULT = StatementNode.assign(v,e); :}
+          | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:};
 
 declare ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
-          | PRIMITIVE:p VARIABLE:v ASSIGNER expression:e  {: RESULT = StatementNode.declare(p,v,e); :};
+          | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a  {: RESULT = StatementNode.declare(p,v,a); :};
 
 expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2);    :}
              | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2);  :}
@@ -68,7 +69,7 @@ expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNo
 
 
 condition ::= condition:c1 COND_AND condition:c2 {: RESULT = ConditionNode.cond_and(c1,c2); :}
-          |   argument:a                         {: RESULT = a; :};
+            | argument:a                         {: RESULT = a; :};
 
 argument ::= ARGRU_NEG argument:a   {: RESULT = ConditionNode.flipArgument(a);   :}
             | OBJECT:o              {: RESULT = ConditionNode.readObject(o);   :}
