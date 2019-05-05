@@ -51,6 +51,7 @@ Primitive       = (int)|(bool)|(string)|(null)
 Boolean         = (true)|(false)
 While           = (while)
 Function        = (function)
+Return          = (return)
 Library         = (print)
 Variable        = ([A-Z|a-z][A-Z|a-z|0-9|_]*)
 Integer         = [0-9][0-9]*
@@ -89,6 +90,7 @@ Integer         = [0-9][0-9]*
 {Boolean}   { debug("BOOLEAN",yytext());  return symbol(sym.OBJECT, new Boolean(yytext())); }
 {While}     { debug("WHILE",yytext());    return symbol(sym.WHILE, new String(yytext()));  }
 {Function}  { debug("FUNCTION",yytext()); return symbol(sym.FUNCTION, new String(yytext()));  }
+{Return}    { debug("RETURN",yytext());   return symbol(sym.RETURN, new String(yytext()));  }
 {Library}   { debug("LIBRARY",yytext());  return symbol(sym.LIBRARY, new String(yytext()));  }
 {Variable}  { debug("VARIABLE",yytext()); return symbol(sym.VARIABLE, new String(yytext())); }
 {Integer}   { debug("NUMBER",yytext());   return symbol(sym.OBJECT, new Integer(yytext()));  }

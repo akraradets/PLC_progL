@@ -17,7 +17,7 @@ action code {:
 // Primitive set
 terminal String         PRIMITIVE, LIBRARY;
 // TOKEN set
-terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE, WHILE, FUNCTION;
+terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE, WHILE, FUNCTION, RETURN;
 // Operation set
 terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // Conditon set
@@ -52,6 +52,7 @@ initial ::= statement:s SEPARATOR           {: System.out.println("DONE"); s.deb
 statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoot()); RESULT = s2; RESULT.debug(); :}
           | declare_var:d                               {: RESULT = d; :}
           | declare_func:d                              {: RESULT = d; :}
+
           | IF LPAREN condition:c RPAREN 
             LBRANCE statement:s SEPARATOR RBRANCE       
                                                         {: RESULT = StatementNode.ifthen(c,s); :}
