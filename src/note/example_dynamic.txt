@@ -1,0 +1,20 @@
+int x =10;
+function f(int x){
+    function a(int x){
+        print("aF");
+    };
+    x = 30;
+    a();
+    print(x);
+};
+function g(int x){
+    function a(int x){
+        print("aG");
+    };
+    x = 20;
+    f();
+    a();
+    print(x);
+};
+g();
+print(x);
