@@ -69,7 +69,7 @@ public class UI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(labelInput)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -81,7 +81,7 @@ public class UI extends javax.swing.JFrame {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         layout.setVerticalGroup(
@@ -124,6 +124,10 @@ public class UI extends javax.swing.JFrame {
         catch (Exception ex) {
             System.err.println(ex.getMessage());
             output = ex.getMessage();
+            if(ex.getMessage().equals("Can't recover from previous error(s)")){
+                output = "systax error!!";
+            }
+            
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
         }
         printOutput();
