@@ -44,13 +44,14 @@ public class UI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         outputText.setColumns(20);
+        outputText.setFont(new java.awt.Font("Courier New", 0, 18)); // NOI18N
         outputText.setRows(5);
         jScrollPane1.setViewportView(outputText);
 
         labelInput.setText("Input :");
 
         inputText.setColumns(20);
-        inputText.setFont(new java.awt.Font("Courier New", 0, 48)); // NOI18N
+        inputText.setFont(new java.awt.Font("Courier New", 0, 18)); // NOI18N
         inputText.setRows(5);
         jScrollPane2.setViewportView(inputText);
 
