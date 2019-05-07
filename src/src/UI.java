@@ -5,6 +5,7 @@
  */
 package src;
 
+import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,9 +61,10 @@ public class UI extends javax.swing.JFrame {
         labelOutput.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         labelOutput.setText("Output :");
 
-        buttonRun.setBackground(new java.awt.Color(0, 204, 204));
+        buttonRun.setBackground(new java.awt.Color(104, 159, 56));
         buttonRun.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         buttonRun.setText("Run!");
+        buttonRun.setBorderPainted(false);
         buttonRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonRunActionPerformed(evt);
@@ -114,18 +116,21 @@ public class UI extends javax.swing.JFrame {
         Memory m = Memory.getInstance();
         // Clean the memory
         m.init();
+        outputText.setForeground(Color.black);
         // run program
         UI.output = "";
         try {
             this.run();
         } catch (Error e){
+            outputText.setForeground(Color.red);
             System.err.println(e.getMessage());
-            output = e.getMessage();
+            output += e.getMessage();
             Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, e);
         } 
         catch (Exception ex) {
+            outputText.setForeground(Color.red);
             System.err.println(ex.getMessage());
-            output = ex.getMessage();
+            output += ex.getMessage();
             if(ex.getMessage().equals("Can't recover from previous error(s)")){
                 output = "systax error!!";
             }
