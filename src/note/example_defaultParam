@@ -1,0 +1,6 @@
+string x = "main X";
+function f(string x = "func X"){
+    print(x);
+};
+f();
+f(x);
