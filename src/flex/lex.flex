@@ -62,6 +62,7 @@ Integer         = [0-9][0-9]*
 // token
 "=" { debug("ASSIGNER");  return symbol(sym.ASSIGNER);  }
 ";" { debug("SEPARATOR"); return symbol(sym.SEPARATOR); }
+"," { debug("COMMA"); return symbol(sym.COMMA); }
 "(" { debug("LPAREN");    return symbol(sym.LPAREN); }
 ")" { debug("RPAREN");    return symbol(sym.RPAREN); }
 "{" { debug("LBRANCE");   return symbol(sym.LBRANCE); }

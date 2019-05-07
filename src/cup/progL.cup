@@ -17,7 +17,7 @@ action code {:
 // Primitive set
 terminal String         PRIMITIVE, LIBRARY;
 // TOKEN set
-terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE, WHILE, FUNCTION, RETURN;
+terminal                ASSIGNER, SEPARATOR, LPAREN, RPAREN, LBRANCE, RBRANCE, IF, ELSE, WHILE, FUNCTION, RETURN, COMMA;
 // Operation set
 terminal                OPER_PLUS, OPER_MINUS, OPER_DIVIDE, OPER_MULTI;
 // Conditon set
@@ -32,13 +32,13 @@ terminal String         VARIABLE;
 terminal Object         OBJECT;
 
 non terminal ExpressionNode expression;
-non terminal StatementNode  statement,declare_var,declare_func;
-non terminal ConditionNode  argument, condition;
+non terminal StatementNode  statement,declare_var,declare_func,declare_list;
+non terminal ConditionNode  argument, condition, argument_list;
 non terminal            initial;
 
 /* Precedences */
 precedence left COND_AND,COND_OR,COMP_EQUAL,COMP_LESSTHAN,COMP_MORETHAN,COMP_MOREorEQUAL,COMP_LESSorEQUAL;
-precedence left SEPARATOR, ASSIGNER;
+precedence left SEPARATOR, ASSIGNER, COMMA;
 precedence left OPER_PLUS, OPER_MINUS;
 precedence left OPER_DIVIDE, OPER_MULTI;
 precedence left IF,LPAREN, RPAREN;
@@ -64,18 +64,21 @@ statement ::= statement:s1 SEPARATOR statement:s2       {: s1.addChild(s2.getRoo
             LBRANCE statement:s SEPARATOR RBRANCE 
                                                         {: RESULT = StatementNode.whileloop(c,s); :}
           | VARIABLE:v ASSIGNER argument:a              {: RESULT = StatementNode.assign(v,a); :}
-          | VARIABLE:v ASSIGNER VARIABLE:f LPAREN argument:a RPAREN 
+          | VARIABLE:v ASSIGNER VARIABLE:f LPAREN argument_list:a RPAREN 
                                                         {: RESULT = StatementNode.assignFunction(v,f,a); :}
           | LIBRARY:l LPAREN argument:a RPAREN          {: RESULT = StatementNode.library(l,a);:}
-          | VARIABLE:v LPAREN argument:a RPAREN         {: RESULT = StatementNode.functionCall(v,a);:};
+          | VARIABLE:v LPAREN argument_list:a RPAREN         {: RESULT = StatementNode.functionCall(v,a);:};
 
 declare_var ::= PRIMITIVE:p VARIABLE:v                        {: RESULT = StatementNode.allocate(p,v);  :}
               | PRIMITIVE:p VARIABLE:v ASSIGNER argument:a    {: RESULT = StatementNode.declare_var(p,v,a); :}
               |                                               {: RESULT = StatementNode.empty(); :};
 
-declare_func ::= FUNCTION VARIABLE:v LPAREN declare_var:d RPAREN
+declare_list ::= declare_list:d1 COMMA declare_var:d2 {: RESULT = StatementNode.declare_list(d1,d2); :}
+              | declare_var:d                         {: RESULT = d; :};
+
+declare_func ::= FUNCTION VARIABLE:v LPAREN declare_list:dl RPAREN
                  LBRANCE statement:s SEPARATOR RBRANCE
-                                                        {: RESULT = StatementNode.declare_func(v,d,s); :};
+                                                        {: RESULT = StatementNode.declare_func(v,dl,s); :};
 
 expression ::= expression:e1 OPER_PLUS   expression:e2  {: RESULT = ExpressionNode.add(e1,e2);    :}
              | expression:e1 OPER_MINUS  expression:e2  {: RESULT = ExpressionNode.minus(e1,e2);  :}
@@ -96,6 +99,9 @@ condition ::= condition:c1 COND_AND condition:c2   {: RESULT = ConditionNode.con
             | condition:c1 COMP_MOREorEQUAL condition:c2 {: RESULT = ConditionNode.comp_moreORequal(c1,c2); :}
             | condition:c1 COMP_LESSorEQUAL condition:c2 {: RESULT = ConditionNode.comp_lessORequal(c1,c2); :}
             | argument:a                           {: RESULT = a; :};
+
+argument_list ::= argument_list:a1 COMMA argument:a2 {: RESULT = ConditionNode.chainArgument(a1,a2); :}
+            | argument:a                             {: RESULT = a; :};
 
 argument ::= ARGRU_NEG argument:a   {: RESULT = ConditionNode.flipArgument(a);   :}         
             | expression:e          {: RESULT = ConditionNode.evalExpression(e); :};

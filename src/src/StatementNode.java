@@ -16,9 +16,9 @@ public class StatementNode extends GenericNode {
     private Memory m = Memory.getInstance();
     private Logger logger = new Logger("StatementNode");
     public String value;
-    
+
     public String type;
-    
+
     private ExpressionNode e;
     private ConditionNode c;
     private StatementNode s;
@@ -27,6 +27,8 @@ public class StatementNode extends GenericNode {
     private String funcName;
     private StatementNode funcBody;
     private StatementNode funcParam;
+    private StatementNode d1, d2;
+    private Object o;
 
     // From Decalre
     private StatementNode(String command, String type, String name) {
@@ -47,6 +49,16 @@ public class StatementNode extends GenericNode {
         return d;
     }
 
+    public static StatementNode declare_list(StatementNode d1, StatementNode d2) {
+        StatementNode d = new StatementNode("declare_list");
+        d1.addChild(d2.getRoot());
+        return d2;
+//        d.argv = c;
+//        c.addChild(d);
+//        return d;
+//        return new SteatementNod()
+    }
+
     public static StatementNode declare_func(String funcName, StatementNode declareParam, StatementNode body) {
         StatementNode func = new StatementNode("declare_func");
         // When we call function
@@ -56,7 +68,7 @@ public class StatementNode extends GenericNode {
         func.funcParam = declareParam;
         return func;
     }
-    
+
     public static StatementNode assign(String name, ConditionNode c) {
         StatementNode d = new StatementNode("assign");
         d.value = name;
@@ -64,7 +76,13 @@ public class StatementNode extends GenericNode {
         c.addChild(d);
         return d;
     }
-    
+
+    public static StatementNode assign_value(String name, Object c) {
+        StatementNode d = new StatementNode("assign_value");
+        d.value = name;
+        d.o = c;
+        return d;
+    }
     // New
     private StatementNode(String command) {
         this.command = command;
@@ -77,7 +95,7 @@ public class StatementNode extends GenericNode {
     }
 
     public static StatementNode empty() {
-        return  new StatementNode("empty");
+        return new StatementNode("empty");
     }
 
     public static StatementNode ifthen(ConditionNode c, StatementNode s) {
@@ -110,26 +128,28 @@ public class StatementNode extends GenericNode {
         return library;
     }
 
-    public static StatementNode functionCall(String funcName, ConditionNode a){
+    public static StatementNode functionCall(String funcName, ConditionNode a) {
         StatementNode func = new StatementNode("functionCall");
         func.funcName = funcName;
         func.argv = a;
         return func;
     }
-    public static StatementNode assignFunction(String varName, String funcName, ConditionNode a){
+
+    public static StatementNode assignFunction(String varName, String funcName, ConditionNode a) {
         StatementNode func = new StatementNode("assignFunction");
         func.value = varName;
         func.funcName = funcName;
         func.argv = a;
         return func;
-    }    
-    public static StatementNode functionReturn(ConditionNode a){
+    }
+
+    public static StatementNode functionReturn(ConditionNode a) {
         StatementNode ret = new StatementNode("functionReturn");
         ret.value = "return";
         ret.argv = a;
         return ret;
     }
-    
+
     public Object run() {
         Environment table = m.getEnvironment();
         System.out.println("RUNNNNNNNNNNN command:" + this.command);
@@ -142,7 +162,7 @@ public class StatementNode extends GenericNode {
                 logger.debug("command:" + this.command + " name:" + this.value + " value:" + p.toString());
                 break;
             case "declare_func":
-                FunctionNode func = FunctionNode.declare(this.value,this.funcBody,this.funcParam);
+                FunctionNode func = FunctionNode.declare(this.value, this.funcBody, this.funcParam);
                 table.put_func(this.value, func);
                 logger.debug("command:" + this.command + " name:" + this.value);
                 break;
@@ -157,6 +177,10 @@ public class StatementNode extends GenericNode {
             case "assign":
                 table.update(this.value, this.argv.value);
                 logger.debug("command:" + this.command + " name:" + this.value + " value:" + this.argv.toString());
+                break;
+           case "assign_value":
+                table.update(this.value, this.o);
+                logger.debug("command:" + this.command + " name:" + this.value + " value:" + this.o);
                 break;
             case "ifthen":
                 logger.debug("command:" + this.command);
@@ -191,15 +215,15 @@ public class StatementNode extends GenericNode {
                 break;
             case "functionCall":
                 this.argv.getRoot().run();
-                logger.debug("command:" + this.command + " FuncName:" + this.funcName + " Argv:"+this.argv.value.toString());
-                invoke(this.funcName,this.argv);
+                logger.debug("command:" + this.command + " FuncName:" + this.funcName + " Argv:" + this.argv.value.toString());
+                invoke(this.funcName, this.argv);
                 break;
             case "assignFunction":
                 // function call
                 this.argv.getRoot().run();
-                logger.debug("command:" + this.command + " FuncName:" + this.funcName + " Argv:"+this.argv.value.toString());
+                logger.debug("command:" + this.command + " FuncName:" + this.funcName + " Argv:" + this.argv.value.toString());
                 // Now get result
-                PrimObj result = invoke(this.funcName,this.argv);
+                PrimObj result = invoke(this.funcName, this.argv);
                 // assign to varivale
                 table.update(this.value, result);
                 logger.debug("command:" + this.command + " name:" + this.value + " value:" + result.toString());
@@ -220,15 +244,16 @@ public class StatementNode extends GenericNode {
         // return to parent
         return null;
     }
-
+    
     public String toString() {
         if (this.command.equals("ifthen")) {
             String a = "ifthen [true]:" + this.children.get("true").toString() + "[default]";
             return a;
-        } else if(this.command.equals("assign")){
+        } else if (this.command.equals("assign")) {
             String a = this.command + " " + this.value + " " + this.argv.toString();
             return a;
-        }{
+        }
+        {
             String a = this.command;
             return a;
         }
@@ -243,12 +268,12 @@ public class StatementNode extends GenericNode {
         logger.error("ConditionNode did not load with BoolPrim " + c.value.getClass());
         throw new Error("ConditionNode did not load with BoolPrim " + c.value.getClass());
     }
-    
-    private PrimObj invoke(String funcName, ConditionNode argv){
+
+    private PrimObj invoke(String funcName, ConditionNode argv) {
         FunctionNode f = m.findFunction(funcName);
         f.argv = argv;
         f.run();
-        return  f.output;
-        
+        return f.output;
+
     }
 }

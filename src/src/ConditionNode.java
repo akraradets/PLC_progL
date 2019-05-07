@@ -19,21 +19,13 @@ public class ConditionNode extends GenericNode {
     public PrimObj value;
     private String command;
     private ConditionNode c1, c2;
+    private ConditionNode a1, a2;
     private ExpressionNode e1, e2;
     private String varname;
-
-    private ConditionNode(Object o) {
-        this.command = "readObject";
-        this.value = PrimObj_Factory.get(o);
-    }
 
     private ConditionNode(String command) {
         this.value = null;
         this.command = command;
-    }
-
-    public static ConditionNode readObject(Object o) {
-        return new ConditionNode(o);
     }
 
     public static ConditionNode readVariable(String v) {
@@ -42,6 +34,11 @@ public class ConditionNode extends GenericNode {
         return e;
     }
 
+    public static ConditionNode chainArgument(ConditionNode a1, ConditionNode a2){
+        a1.addChild(a2.getRoot());
+        return a2;
+    }
+    
     public static ConditionNode flipArgument(ConditionNode c_pre) {
         ConditionNode c = new ConditionNode("flipArgument");
         c.c1 = c_pre;
